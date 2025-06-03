@@ -1,16 +1,17 @@
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        fancy: ["Playfair Display", "serif"],
+      keyframes: {
+        slideIn: {
+          '0%': { opacity: '0', transform: 'translateX(-50%) scale(0.8)' },
+          '100%': { opacity: '1', transform: 'translateX(0) scale(1)' },
+        }
       },
-    },
+      animation: {
+        slideIn: 'slideIn 0.5s ease-out backwards',
+      }
+    }
   },
   plugins: [],
-};
+}
