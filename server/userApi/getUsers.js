@@ -7,7 +7,7 @@ const getUsers = async (params) => {
     const response = await fetchApi(endpoint, "GET", null, params);
     return response;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching users:", error.message);
     throw error;
   }
 };

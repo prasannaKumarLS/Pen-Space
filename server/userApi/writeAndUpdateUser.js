@@ -7,8 +7,7 @@ const writeAndUpdateUser = async (userData) => {
     const response = await fetchApi(endpoint, "POST", userData);
     return response;
   } catch (error) {
-    console.error("Error writing and updating user:", error);
-    throw error;
+    console.error("Error writing and updating user:", error.message);
   }
 };
 
