@@ -1,13 +1,17 @@
-import React from 'react';
-import './index.css';
-import Signup from './assets/signup';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./index.css";
+import Signup from "./assets/signup";
+import HomePage from "./assets/homePage";
 
-function UserProfileCard() {
+function App() {
   return (
-    <div>
-      <Signup />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Signup />} />
+        <Route path="/home" element={<HomePage />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default UserProfileCard;
+export default App;

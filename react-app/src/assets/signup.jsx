@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import InputText from "./textInput";
 import TitleLogo from "./projectTitle";
+import { useNavigate } from "react-router-dom";
+import api from "../api";
+import MessageCard from "./messageCard";
 
 export default function SignIn() {
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     name: "",
     username: "",
@@ -11,6 +16,13 @@ export default function SignIn() {
 
   const [isSignUp, setIsSignUp] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [showMessage, setShowMessage] = useState({
+    success: false,
+    error: false,
+  });
+
   const updateUserData = (field, value) => {
     setUserData((prevData) => ({
       ...prevData,
@@ -18,11 +30,32 @@ export default function SignIn() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleMessageCard = (success = "SUCCESS") => {
+    const isSuccess = success === "SUCCESS";
+    setShowMessage({ success: isSuccess, error: !isSuccess });
+    setTimeout(() => {
+      setShowMessage({ success: false, error: false });
+    }, 4000);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Username:", userData.username);
-    console.log("Password:", userData.password);
-    // Add your login logic here
+    try {
+      await api.post(isSignUp ? "/login/signup" : "/login/signIn", userData);
+      if (isSignUp) {
+        setIsSignUp(false);
+        setUserData({ name: "", username: "", password: "" });
+        handleMessageCard("SUCCESS");
+      } else {
+        navigate("/home");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      setErrorMessage(errorMessage);
+      handleMessageCard("ERROR");
+    }
   };
 
   return (
@@ -33,6 +66,12 @@ export default function SignIn() {
         className="bg-white/30 backdrop-blur-md border border-white/40 p-8 rounded-lg shadow-xl w-full max-w-sm relative z-10"
       >
         <TitleLogo />
+        {showMessage.success && (
+          <MessageCard
+            message="User registered successfully!"
+            type="SUCCESS"
+          />
+        )}
         {isSignUp && (
           <>
             {userData.name && (
@@ -66,6 +105,9 @@ export default function SignIn() {
         >
           {isSignUp ? "Sign Up" : "Sign In"}
         </button>
+        {showMessage.error && (
+          <MessageCard message={errorMessage} type="ERROR" />
+        )}
         <p className="text-center text-sm text-gray-700">
           {isSignUp ? "Already have an account?" : "New here?"}{" "}
           <button

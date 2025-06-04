@@ -49,14 +49,15 @@ router.post("/signIn", async (req, res) => {
         username,
         name: users[0].name,
       };
-      return res
-        .status(200)
-        .json({ message: `User authenticated successfully`, username });
+      return res.status(200).json({
+        message: `User authenticated successfully`,
+        username,
+        name: users[0].name,
+      });
     } else {
       return res.status(401).json({ error: "Invalid username or password" });
     }
   } catch (error) {
-    console.error("Error during /signIn:", error.message);
     return res
       .status(500)
       .json({ error: `Error while fetching users: ${error.message}` });
@@ -75,7 +76,11 @@ router.post("/signup", async (req, res) => {
   const newUser = { ...userData, password };
   try {
     const response = await writeAndUpdateUser(newUser);
-    return res.status(200).json(response);
+    return res.status(200).json({
+      name: response.fullName,
+      username: response.username,
+      message: "User signed up successfully",
+    });
   } catch (error) {
     console.error("Error in /signup:", error.message);
     res
@@ -98,6 +103,15 @@ router.post("/logout", (req, res) => {
     res.clearCookie("connect.sid");
     return res.status(200).json({ message: "User logged out successfully" });
   });
+});
+
+//Get Session Route
+router.get("/session", (req, res) => {
+  if (req.session.user) {
+    res.json({ name: req.session.user.name });
+  } else {
+    res.status(401).json({ error: "Not logged in" });
+  }
 });
 
 export default router;
