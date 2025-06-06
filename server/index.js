@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import loginRoutes from "./userApi/loginRoutes.js";
+import loginRoutes from "./API/userAPI/loginRoutes.js";
+import noteApiRoutes from "./API/notesAPI/noteApiRoutes.js";
 
 // Initialize Express application
 const app = express();
@@ -9,13 +10,16 @@ const PORT = 3000;
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
+
 app.use(
   session({
     secret: "donotWasteYourTimeReadingThisSecretKey",
@@ -27,11 +31,14 @@ app.use(
     },
   })
 );
+
 app.use("/login", loginRoutes);
+
+app.use("/note", noteApiRoutes);
 
 //Middleware authentication Check
 function isAuthenticated(req, res, next) {
-  req.session.user
+  return req.session.user
     ? next()
     : res.status(401).json({ error: "Unauthorized access" });
 }

@@ -107,8 +107,9 @@ router.post("/logout", (req, res) => {
 
 //Get Session Route
 router.get("/session", (req, res) => {
-  if (req.session.user) {
-    res.json({ name: req.session.user.name });
+  const sessionData = req.session.user;
+  if (sessionData) {
+    res.json({ name: sessionData.name });
   } else {
     res.status(401).json({ error: "Not logged in" });
   }

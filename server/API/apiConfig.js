@@ -18,7 +18,7 @@ const fetchApi = async (
           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWRjZTIwYi0zNzRlLWU3NzEtZjFmYy1lNjk2NzdmODZlOGIifQ.m_xIoEiM5dDd440AZhy7BZX_FbOio7eR-UVwq2RwHzw",
         ...customHeaders,
       },
-      params,
+      params: params,
     });
     return response.data;
   } catch (error) {
