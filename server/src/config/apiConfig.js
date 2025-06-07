@@ -10,12 +10,11 @@ const fetchApi = async (
   try {
     const response = await axios({
       method,
-      url: `https://vuramdemo.appiancloud.com/suite/webapi/${endpoint}`,
+      url: `${process.env.APPIAN_BASE_URL}${endpoint}`,
       data,
       headers: {
         "Content-Type": "application/json",
-        "appian-api-key":
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZWRjZTIwYi0zNzRlLWU3NzEtZjFmYy1lNjk2NzdmODZlOGIifQ.m_xIoEiM5dDd440AZhy7BZX_FbOio7eR-UVwq2RwHzw",
+        "appian-api-key": process.env.APPIAN_API_KEY,
         ...customHeaders,
       },
       params: params,
@@ -23,7 +22,7 @@ const fetchApi = async (
     return response.data;
   } catch (error) {
     console.error(
-      `Error fetching API [${method} - https://vuramdemo.appiancloud.com/suite/webapi/${endpoint}]:`,
+      `Error fetching API [${method} - ${process.env.APPIAN_BASE_URL}${endpoint}]:`,
       error
     );
     throw error;

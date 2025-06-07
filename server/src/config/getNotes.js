@@ -1,4 +1,4 @@
-import fetchApi from "../apiConfig.js";
+import fetchApi from "./apiConfig.js";
 
 const endpoint = "getNotesData";
 

@@ -1,14 +1,12 @@
-import { Router } from "express";
 import bcrypt from "bcrypt";
-import getUsers from "./getUsers.js";
-import writeAndUpdateUser from "./writeAndUpdateUser.js";
+import getUsers from "../config/getUsers.js";
+import writeAndUpdateUser from "../config/writeUser.js";
 
 // Initialize Express application
-const router = Router();
 const BCRYPT_SALT_ROUNDS = 10;
 
 //Validate Username for sign up
-router.get("/validateUser", async (req, res) => {
+const validateUser = async (req, res) => {
   const { username } = req.query;
   if (!username) {
     return res.status(400).json({ error: "Username is required" });
@@ -28,10 +26,10 @@ router.get("/validateUser", async (req, res) => {
       .status(500)
       .json({ error: `Error while fetching users: ${error.message}` });
   }
-});
+};
 
-//Sign In Route
-router.post("/signIn", async (req, res) => {
+//Sign In
+const signIn = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res
@@ -62,10 +60,10 @@ router.post("/signIn", async (req, res) => {
       .status(500)
       .json({ error: `Error while fetching users: ${error.message}` });
   }
-});
+};
 
-//Sign Up Route
-router.post("/signup", async (req, res) => {
+//Sign Up
+const signUp = async (req, res) => {
   const userData = req.body;
   if (!userData.username || !userData.password) {
     return res
@@ -87,10 +85,10 @@ router.post("/signup", async (req, res) => {
       .status(500)
       .json({ error: `Error while signing up user: ${error.message}` });
   }
-});
+};
 
-//Logout Route
-router.post("/logout", (req, res) => {
+//Logout
+const logout = (req, res) => {
   if (!req.session.user) {
     return res.status(400).json({ error: "No user is currently logged in" });
   }
@@ -103,16 +101,16 @@ router.post("/logout", (req, res) => {
     res.clearCookie("connect.sid");
     return res.status(200).json({ message: "User logged out successfully" });
   });
-});
+};
 
-//Get Session Route
-router.get("/session", (req, res) => {
+//Get Session
+const getSession = (req, res) => {
   const sessionData = req.session.user;
   if (sessionData) {
     res.json({ name: sessionData.name });
   } else {
     res.status(401).json({ error: "Not logged in" });
   }
-});
+};
 
-export default router;
+export { validateUser, signIn, signUp, logout, getSession };

@@ -1,4 +1,4 @@
-import fetchApi from "../apiConfig.js";
+import fetchApi from "../../src/config/apiConfig.js";
 
 const endpoint = "writeAndUpdateUsers";
 

@@ -1,10 +1,7 @@
-import { Router } from "express";
-import writeAndUpdateNotes from "./writeAndUpdateNotes.js";
-import getNotes from "./getNotes.js";
+import writeNotes from "../config/writeNotes.js";
+import queryNotes from "../config/getNotes.js";
 
-const router = Router();
-
-router.post("/writeAndUpdateNotes", async (req, res) => {
+const writeAndUpdateNotes = async (req, res) => {
   const notesData = req.body;
   if (!notesData) return res.status(400).json({ error: "Notes Data is empty" });
   try {
@@ -16,16 +13,16 @@ router.post("/writeAndUpdateNotes", async (req, res) => {
         isActive: true,
       };
     });
-    const response = await writeAndUpdateNotes(updatedNotes);
+    const response = await writeNotes(updatedNotes);
     res.status(200).json({ data: response });
   } catch (err) {
     res
       .status(400)
       .json({ error: `Error while writing Notes data : ${err.message}` });
   }
-});
+};
 
-router.get("/getNotes", async (req, res) => {
+const getNotes = async (req, res) => {
   const params = req.query;
   if (!params) return res.status(400).json({ error: "Params are empty" });
   try {
@@ -36,13 +33,13 @@ router.get("/getNotes", async (req, res) => {
             { username: params.username || req.session.user.username },
           ] // To query the parent note table
         : params; // To query the child note table
-    const response = await getNotes(updatedParams);
+    const response = await queryNotes(updatedParams);
     res.status(200).json({ data: response });
   } catch (err) {
     res
       .status(400)
       .json({ error: `Error while fetching Notes data : ${err.message}` });
   }
-});
+};
 
-export default router;
+export { writeAndUpdateNotes, getNotes };

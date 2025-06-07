@@ -1,9 +1,9 @@
 import { useState } from "react";
-import InputText from "./textInput";
-import TitleLogo from "./projectTitle";
+import InputText from "./components/textInput";
+import TitleLogo from "./components/projectTitle";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
-import MessageCard from "./messageCard";
+import MessageCard from "./components/messageCard";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function SignIn() {
       handleMessageCard("ERROR");
     }
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen background-container">
       <div className="background-overlay" />

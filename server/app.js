@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import loginRoutes from "./API/userAPI/loginRoutes.js";
-import noteApiRoutes from "./API/notesAPI/noteApiRoutes.js";
-
+import routes from "./src/routes/index.js";
+import dotenv from "dotenv";
 // Initialize Express application
+
+dotenv.config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -22,7 +23,7 @@ app.use(
 
 app.use(
   session({
-    secret: "donotWasteYourTimeReadingThisSecretKey",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -32,21 +33,7 @@ app.use(
   })
 );
 
-app.use("/login", loginRoutes);
-
-app.use("/note", noteApiRoutes);
-
-//Middleware authentication Check
-function isAuthenticated(req, res, next) {
-  return req.session.user
-    ? next()
-    : res.status(401).json({ error: "Unauthorized access" });
-}
-
-//Routes
-app.get("/home", isAuthenticated, (req, res) => {
-  res.send("Hello, World!");
-});
+app.use("/api", routes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
