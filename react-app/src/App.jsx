@@ -5,6 +5,7 @@ import "./App.css";
 import NoteTile from "./assets/components/noteTile";
 import RichTextEditor from "./assets/components/richTextEditor";
 
+
 function App() {
   const data = {
     title: "Prasanna's Draft",
