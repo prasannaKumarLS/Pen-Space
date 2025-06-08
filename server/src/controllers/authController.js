@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import getUsers from "../config/getUsers.js";
 import writeAndUpdateUser from "../config/writeUser.js";
+import generateToken from "../middleware/generateAuthToken.js";
+import jwt from "jsonwebtoken";
 
 // Initialize Express application
 const BCRYPT_SALT_ROUNDS = 10;
@@ -30,7 +32,7 @@ const validateUser = async (req, res) => {
 
 //Sign In
 const signIn = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body || {};
   if (!username || !password) {
     return res
       .status(400)
@@ -43,14 +45,10 @@ const signIn = async (req, res) => {
     }
     const match = await bcrypt.compare(password, users[0].hashPassword);
     if (match) {
-      req.session.user = {
-        username,
-        name: users[0].name,
-      };
+      const token = await generateToken({ username, name: users[0].name });
       return res.status(200).json({
         message: `User authenticated successfully`,
-        username,
-        name: users[0].name,
+        token,
       });
     } else {
       return res.status(401).json({ error: "Invalid username or password" });
@@ -87,30 +85,13 @@ const signUp = async (req, res) => {
   }
 };
 
-//Logout
-const logout = (req, res) => {
-  if (!req.session.user) {
-    return res.status(400).json({ error: "No user is currently logged in" });
-  }
-  req.session.destroy((err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Failed to log out", error: err.message });
-    }
-    res.clearCookie("connect.sid");
-    return res.status(200).json({ message: "User logged out successfully" });
-  });
-};
-
 //Get Session
-const getSession = (req, res) => {
-  const sessionData = req.session.user;
-  if (sessionData) {
-    res.json({ name: sessionData.name });
-  } else {
-    res.status(401).json({ error: "Not logged in" });
-  }
+const getSession = async (req, res) => {
+  return req.user
+    ? res.status(200).json(req.user)
+    : res
+        .status(401)
+        .json({ error: "Something went wrong while fetching session info" });
 };
 
-export { validateUser, signIn, signUp, logout, getSession };
+export { validateUser, signIn, signUp, getSession };

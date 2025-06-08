@@ -3,16 +3,15 @@ import {
   validateUser,
   signIn,
   signUp,
-  logout,
   getSession,
 } from "../controllers/authController.js";
+import authenticateToken from "../middleware/authenticateToken.js";
 
 const router = Router();
 
 router.get("/validateUser", validateUser);
 router.post("/signIn", signIn);
 router.post("/signup", signUp);
-router.post("/logout", logout);
-router.get("/session", getSession);
+router.get("/session", authenticateToken, getSession);
 
 export default router;

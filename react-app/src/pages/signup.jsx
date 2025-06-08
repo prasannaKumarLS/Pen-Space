@@ -1,9 +1,9 @@
 import { useState } from "react";
-import InputText from "./components/textInput";
-import TitleLogo from "./components/projectTitle";
+import InputText from "../utils/textInput";
+import TitleLogo from "../components/projectTitle";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
-import MessageCard from "./components/messageCard";
+import { signUp, signIn } from "../services/authServices.js";
+import MessageCard from "../components/messageCard";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -16,11 +16,9 @@ export default function SignIn() {
 
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const [showMessage, setShowMessage] = useState({
-    success: false,
-    error: false,
+  const [messageCard, setMessageCard] = useState({
+    message: "",
+    type: "",
   });
 
   const updateUserData = (field, value) => {
@@ -30,34 +28,47 @@ export default function SignIn() {
     }));
   };
 
-  const handleMessageCard = (success = "SUCCESS") => {
-    const isSuccess = success === "SUCCESS";
-    setShowMessage({ success: isSuccess, error: !isSuccess });
+  const handleMessageCard = (message, type) => {
+    setMessageCard({
+      message,
+      type,
+    });
     setTimeout(() => {
-      setShowMessage({ success: false, error: false });
+      setMessageCard({
+        message: "",
+        type: "",
+      });
     }, 4000);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await api.post(isSignUp ? "/login/signup" : "/login/signIn", userData);
+    const res = isSignUp
+      ? await signUp(userData)
+      : await signIn(userData.username, userData.password);
+    if (res.error) {
+      handleMessageCard(res.error, "ERROR");
+      console.log(res.error);
+    } else {
       if (isSignUp) {
+        handleMessageCard("User registered successfully!", "SUCCESS");
+        setUserData({
+          name: "",
+          username: "",
+          password: "",
+        });
         setIsSignUp(false);
-        setUserData({ name: "", username: "", password: "" });
-        handleMessageCard("SUCCESS");
+        console.log(res);
       } else {
-        navigate("/home");
+        handleMessageCard("User logged in successfully!", "SUCCESS");
+        console.log(res);
+        navigate("/home", {
+          state: { username: res.username, name: res.name },
+        });
       }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.error ||
-        "Something went wrong. Please try again.";
-      setErrorMessage(errorMessage);
-      handleMessageCard("ERROR");
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen background-container">
       <div className="background-overlay" />
@@ -66,11 +77,8 @@ export default function SignIn() {
         className="bg-white/30 backdrop-blur-md border border-white/40 p-8 rounded-lg shadow-xl w-full max-w-sm relative z-10"
       >
         <TitleLogo />
-        {showMessage.success && (
-          <MessageCard
-            message="User registered successfully!"
-            type="SUCCESS"
-          />
+        {messageCard.type === "SUCCESS" && (
+          <MessageCard message={messageCard.message} type="SUCCESS" />
         )}
         {isSignUp && (
           <>
@@ -105,8 +113,8 @@ export default function SignIn() {
         >
           {isSignUp ? "Sign Up" : "Sign In"}
         </button>
-        {showMessage.error && (
-          <MessageCard message={errorMessage} type="ERROR" />
+        {messageCard.type === "ERROR" && (
+          <MessageCard message={messageCard.message} type="ERROR" />
         )}
         <p className="text-center text-sm text-gray-700">
           {isSignUp ? "Already have an account?" : "New here?"}{" "}
