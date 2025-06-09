@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import getUsers from "../config/getUsers.js";
 import writeAndUpdateUser from "../config/writeUser.js";
 import generateToken from "../middleware/generateAuthToken.js";
-import jwt from "jsonwebtoken";
 
 // Initialize Express application
 const BCRYPT_SALT_ROUNDS = 10;

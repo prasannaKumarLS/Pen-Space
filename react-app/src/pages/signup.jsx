@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputText from "../utils/textInput";
 import TitleLogo from "../components/projectTitle";
 import { useNavigate } from "react-router-dom";
 import { signUp, signIn } from "../services/authServices.js";
 import MessageCard from "../components/messageCard";
+import { getSession } from "../services/authServices.js";
+
+const userInfo = {
+  name: "",
+  username: "",
+  password: "",
+};
+
+const message = {
+  message: "",
+  type: "",
+};
 
 export default function SignIn() {
   const navigate = useNavigate();
-
-  const [userData, setUserData] = useState({
-    name: "",
-    username: "",
-    password: "",
-  });
-
+  const [userData, setUserData] = useState(userInfo);
   const [isSignUp, setIsSignUp] = useState(false);
-
-  const [messageCard, setMessageCard] = useState({
-    message: "",
-    type: "",
-  });
+  const [messageCard, setMessageCard] = useState(message);
 
   const updateUserData = (field, value) => {
     setUserData((prevData) => ({
@@ -34,12 +36,20 @@ export default function SignIn() {
       type,
     });
     setTimeout(() => {
-      setMessageCard({
-        message: "",
-        type: "",
-      });
+      setMessageCard(message);
     }, 4000);
   };
+
+  function onSignup() {
+    handleMessageCard("User registered successfully!", "SUCCESS");
+    setUserData(userInfo);
+    setIsSignUp(false);
+  }
+
+  function onSignIn() {
+    handleMessageCard("User logged in successfully!", "SUCCESS");
+    navigate("/home");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,24 +60,19 @@ export default function SignIn() {
       handleMessageCard(res.error, "ERROR");
       console.log(res.error);
     } else {
-      if (isSignUp) {
-        handleMessageCard("User registered successfully!", "SUCCESS");
-        setUserData({
-          name: "",
-          username: "",
-          password: "",
-        });
-        setIsSignUp(false);
-        console.log(res);
-      } else {
-        handleMessageCard("User logged in successfully!", "SUCCESS");
-        console.log(res);
-        navigate("/home", {
-          state: { username: res.username, name: res.name },
-        });
-      }
+      return isSignUp ? onSignup() : onSignIn();
     }
   };
+
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      if (session && !session.error) {
+        return navigate("/home", { replace: true });
+      }
+    }
+    checkSession();
+  }, [navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen background-container">
@@ -120,7 +125,10 @@ export default function SignIn() {
           {isSignUp ? "Already have an account?" : "New here?"}{" "}
           <button
             type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setUserData(userInfo);
+            }}
             className="text-blue-600 hover:underline"
           >
             {isSignUp ? "Sign In" : "Sign Up"}

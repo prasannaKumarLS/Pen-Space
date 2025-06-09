@@ -23,8 +23,14 @@ const signIn = async (username, password) => {
       username,
       password,
     });
+    const { token } = response.data || {};
+    if (!token) {
+      throw new Error("Token is empty");
+    }
+    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
+    console.log(error);
     return {
       error: error.response?.data?.error || "Sign in failed. Please try again.",
     };
