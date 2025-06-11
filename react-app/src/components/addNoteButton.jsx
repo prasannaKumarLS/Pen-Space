@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, FileText, UploadCloud } from "lucide-react";
 
-export default function AddNoteButton() {
+export default function AddNoteButton(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -12,28 +13,34 @@ export default function AddNoteButton() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside); //Mount listener
-    return () => {    
+    return () => {
       document.removeEventListener("mousedown", handleClickOutside); //Unmount listener
     };
   }, []);
-
-  const handleDropdownClick = (option) => {
-    console.log("Selected:", option);
-    setIsOpen(false);
-  };
 
   const menuItems = [
     {
       label: "Add Note",
       icon: <FileText size={20} className="text-gray-600" />,
-      action: () => handleDropdownClick("Add Note"),
+      type: "ADD",
     },
     {
       label: "Upload Document",
       icon: <UploadCloud size={20} className="text-gray-600" />,
-      action: () => handleDropdownClick("Upload Document"),
+      type: "UPLOAD",
     },
   ];
+
+  async function onClickHandler(type) {
+    setIsLoading(true);
+    try {
+      await props.addNoteOnClick(type);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+    setIsOpen(false);
+  }
 
   return (
     <div className="flex justify-end font-[Gill Sans] z-[2]">
@@ -68,12 +75,15 @@ export default function AddNoteButton() {
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                onClick={item.action}
+                disabled={isLoading}
+                onClick={() => onClickHandler(item.type)}
                 className="flex items-center justify-items-start w-full px-3 py-3 text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition-colors duration-150"
                 role="menuitem"
               >
                 {item.icon}
-                <span className="ml-3 font-medium text-[0.8rem]">{item.label}</span>
+                <span className="ml-3 font-medium text-[0.8rem]">
+                  {item.label}
+                </span>
               </button>
             ))}
           </div>

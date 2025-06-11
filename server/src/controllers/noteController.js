@@ -9,7 +9,7 @@ const writeAndUpdateNotes = async (req, res) => {
     const updatedNotes = notesArray.map((note) => {
       return {
         ...note,
-        username: req.session.user.username,
+        username: req.user.username,
         isActive: true,
       };
     });
@@ -30,7 +30,7 @@ const getNotes = async (req, res) => {
       params.type === "NOTES"
         ? [
             ...params,
-            { username: params.username || req.session.user.username },
+            { username: params.username || req.user.username },
           ] // To query the parent note table
         : params; // To query the child note table
     const response = await queryNotes(updatedParams);
