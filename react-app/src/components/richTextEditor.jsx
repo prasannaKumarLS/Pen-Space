@@ -46,11 +46,10 @@ const NoteEditor = () => {
   );
 
   const handleSaveNote = () => {
-    console.log("Saving Note:");
+    
     console.log("Content (HTML):", value);
-    alert("Note content logged to console!");
   };
-  console.log("Current editor value:", value);
+  
   return (
     <div className="note-editor-container">
       <div>

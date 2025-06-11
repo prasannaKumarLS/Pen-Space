@@ -1,51 +1,66 @@
-import { useEffect, useState } from "react";
-import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession";
-import SideBar from "../components/sideBar";
+import { useState } from "react";
+import NoteTile from "../components/noteTile";
+import RichTextEditor from "../components/richTextEditor";
+import AddNoteButton from "../components/addNoteButton";
 
 export default function HomePage() {
-  const sessionInfo = AuthenticateAndGetSessionInfo();
-  const [session, setSession] = useState({});
-
-  useEffect(() => {
-    async function fetchSession() {
-      const data = await sessionInfo();
-      setSession(data);
-      console.log(data);
-    }
-    fetchSession();
-  }, [sessionInfo]);
+  const note = [
+    {
+      noteId: 1,
+      title: "Draft",
+      category: "Marketing",
+      summary:
+        "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
+      modifiedOn: "Today 12:27",
+    },
+    {
+      noteId: 2,
+      title: "React JS",
+      category: "Web Development",
+      summary:
+        "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
+      modifiedOn: "Today 12:27",
+    },
+     {
+      noteId: 3,
+      title: "Draft",
+      category: "Marketing",
+      summary:
+        "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
+      modifiedOn: "Today 12:27",
+    },
+    {
+      noteId: 4,
+      title: "React JS",
+      category: "Web Development",
+      summary:
+        "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
+      modifiedOn: "Today 12:27",
+    },
+  ];
+  const [selectedNoteId, setSelectedNoteId] = useState(note[0].noteId);
 
   return (
-    <div className="flex h-screen w-full">
-      <SideBar />
-
-      {/* Cards Column - 30% */}
-      <section
-        className="bg-gray-100 p-4 overflow-y-auto"
-        style={{ width: "15%" }}
-      >
+    <div className="flex h-screen w-full bg-[#E7EFFC]">
+      <section className="p-4 overflow-y-auto ml-1 " style={{ width: "19%" }}>
         <div className="flex flex-col gap-4">
-          {[1, 2, 3, 4, 5, 6, 7].map((item) => (
-            <div key={item} className="bg-white rounded-xl shadow p-4">
-              <h2 className="font-bold text-lg mb-2">Card {item}</h2>
-              <p className="text-gray-600 text-sm">
-                Some card content goes here.
-              </p>
-            </div>
+          <AddNoteButton />
+          {note.map((item) => (
+            <NoteTile
+              key={item.noteId}
+              noteId={item.noteId}
+              title={item.title}
+              summary={item.summary}
+              category={item.category}
+              modifiedOn={item.modifiedOn}
+              onClick={() => setSelectedNoteId(item.noteId)}
+              selectedNoteId={selectedNoteId}
+            />
           ))}
         </div>
       </section>
-
-      {/* RTE Area - 60% */}
-      <main className="bg-white p-6" style={{ width: "70%" }}>
-        <h1 className="text-2xl font-bold mb-4">Rich Text Editor Area</h1>
-        <div className="border rounded-xl p-4 min-h-[400px]">
-          {/* Insert your RTE component here */}
-          <textarea
-            className="w-full h-64 p-2 rounded border focus:outline-none"
-            placeholder="Start typing..."
-          />
-        </div>
+      <main className="pr-1 w-[100%]">
+        <RichTextEditor />
       </main>
     </div>
   );

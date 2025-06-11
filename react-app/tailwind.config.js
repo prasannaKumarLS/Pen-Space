@@ -26,6 +26,9 @@ module.exports = {
         "fade-out-delay": "fadeOut 0.5s ease-in-out 3.5s forwards",
         "progress-bar": "progressShrink 4s linear forwards",
       },
+      fontFamily: {
+        montserrat: ["Montserrat", "sans-serif"],
+      },
     },
   },
   plugins: [],
