@@ -45,7 +45,7 @@ export default function Sidebar(props) {
               <button
                 key={index}
                 className={`p-2 bg-white rounded-full transition duration-200 hover:bg-blue-100 hover:scale-110 active:scale-120 shadow-md ${
-                  isActive ? "bg-blue-300" : ""
+                  isActive ? "bg-blue-400" : ""
                 } `}
                 onClick={() => props.handleSideBar(index)}
               >

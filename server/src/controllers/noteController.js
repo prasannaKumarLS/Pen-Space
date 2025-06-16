@@ -10,11 +10,11 @@ const writeAndUpdateNotes = async (req, res) => {
       return {
         ...note,
         username: req.user.username,
-        isActive: true,
+        isActive: notesData.isActive || true,
       };
     });
     const response = await writeNotes(updatedNotes);
-    res.status(200).json({ data: response });
+    res.status(200).json(response);
   } catch (err) {
     res
       .status(400)
@@ -27,14 +27,11 @@ const getNotes = async (req, res) => {
   if (!params) return res.status(400).json({ error: "Params are empty" });
   try {
     const updatedParams =
-      params.type === "NOTES"
-        ? [
-            ...params,
-            { username: params.username || req.user.username },
-          ] // To query the parent note table
+      params.TYPE === "NOTES"
+        ? { ...params, username: req.user.username } // To query the parent note table
         : params; // To query the child note table
     const response = await queryNotes(updatedParams);
-    res.status(200).json({ data: response });
+    res.status(200).json(response);
   } catch (err) {
     res
       .status(400)

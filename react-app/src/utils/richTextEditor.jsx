@@ -1,12 +1,10 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; 
+import "react-quill/dist/quill.snow.css";
 import "./richTextEditor.css";
 
-const NoteEditor = () => {
-  const [value, setValue] = useState(
-    "<p><strong>Prasanna kumar LS </strong></p><p><br></p><p>	I'm reading this book.</p>"
-  );
+const NoteEditor = (props) => {
+  const value = props.value;
 
   const modules = useMemo(
     () => ({
@@ -45,18 +43,17 @@ const NoteEditor = () => {
     []
   );
 
-  const handleSaveNote = () => {
-    
-    console.log("Content (HTML):", value);
+  const handleSaveNote = (value) => {
+    props.onSaveNote(value);
   };
-  
+
   return (
     <div className="note-editor-container">
       <div>
         <ReactQuill
           theme="snow"
           value={value}
-          onChange={setValue}
+          onChange={(value) => handleSaveNote(value)}
           modules={modules}
           formats={formats}
           placeholder="Start writing your note here..."

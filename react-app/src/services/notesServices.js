@@ -18,9 +18,11 @@ const writeNotes = async (notesData) => {
   }
 };
 
-const getNotes = async () => {
+const getNotes = async (params) => {
   try {
-    const response = await api.get(`${NOTE_PREFIX}/getNotes`);
+    const response = await api.get(`${NOTE_PREFIX}/getNotes`, {
+      params,
+    });
     return response.data;
   } catch (error) {
     return {

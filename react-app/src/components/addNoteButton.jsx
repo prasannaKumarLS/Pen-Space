@@ -3,7 +3,6 @@ import { Plus, FileText, UploadCloud } from "lucide-react";
 
 export default function AddNoteButton(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +21,7 @@ export default function AddNoteButton(props) {
     {
       label: "Add Note",
       icon: <FileText size={20} className="text-gray-600" />,
-      type: "ADD",
+      type: "CREATE",
     },
     {
       label: "Upload Document",
@@ -30,17 +29,6 @@ export default function AddNoteButton(props) {
       type: "UPLOAD",
     },
   ];
-
-  async function onClickHandler(type) {
-    setIsLoading(true);
-    try {
-      await props.addNoteOnClick(type);
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-    setIsOpen(false);
-  }
 
   return (
     <div className="flex justify-end font-[Gill Sans] z-[2]">
@@ -75,8 +63,10 @@ export default function AddNoteButton(props) {
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                disabled={isLoading}
-                onClick={() => onClickHandler(item.type)}
+                onClick={() => {
+                  props.addNoteOnClick(item.type);
+                  setIsOpen(false);
+                }}
                 className="flex items-center justify-items-start w-full px-3 py-3 text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition-colors duration-150"
                 role="menuitem"
               >
