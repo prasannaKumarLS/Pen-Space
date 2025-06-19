@@ -3,28 +3,35 @@ import RichTextEditor from "../utils/richTextEditor.jsx";
 import { getNotes } from "../services/notesServices.js";
 import { writeNotes } from "../services/notesServices.js";
 import { RefreshCcw } from "lucide-react";
+import LoadingCard from "../utils/loadingCard.jsx";
 
 export default function RichTextEditorWrapper(props) {
   const [rteContent, setRTEcontent] = useState("");
   const previousRteContent = useRef("");
   const [isSaving, setIsSaving] = useState(false);
   const deBounceTimer = useRef(null);
-  const { selectedNoteId } = props;
+  const { selectedNoteId, isRteLoading, setRTELoading } = props;
 
   useEffect(() => {
     const noteContent = async () => {
+      setRTELoading(true);
       const response = await getNotes({
         id: selectedNoteId,
         TYPE: "SUB_CONTENT",
       });
       if (response.error) {
+        setRTEcontent("");
+        previousRteContent.current = "";
         return console.log("Failed to get notes");
       }
-      if (!response.notes) {
+      if (!response || !response[0]) {
+        setRTEcontent("");
+        previousRteContent.current = "";
         return;
       }
       setRTEcontent(response[0].notes);
       previousRteContent.current = response[0].notes;
+      setRTELoading(false);
     };
     noteContent();
   }, [selectedNoteId]);
@@ -56,8 +63,12 @@ export default function RichTextEditorWrapper(props) {
     return () => clearTimeout(deBounceTimer.current);
   }, [rteContent, selectedNoteId]);
 
-  return (
-    <div className="relative w-full h-full">
+  return isRteLoading ? (
+    <div className="flex items-center justify-center h-[85vh] w-full">
+      <LoadingCard TYPE="TEXT" />
+    </div>
+  ) : (
+    <div className="relative w-full h-screen]">
       {isSaving && (
         <div
           className="absolute top-[30px] right-[30px] z-10"

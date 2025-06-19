@@ -1,5 +1,5 @@
-export default function LoadingCard() {
-  return (
+export default function LoadingCard(props) {
+  return props.TYPE === "CARD" ? (
     <div
       className="
       w-full min-h-[150px] max-h-[150px] max-w-[300px] rounded-xl shadow-md p-4 flex flex-col gap-2.5 bg-white border border-gray-100 transition-all duration-200 ease-out
@@ -42,6 +42,15 @@ export default function LoadingCard() {
           style={{ animationDelay: "0.6s" }}
         ></div>
       </div>
+    </div>
+  ) : (
+    <div class="relative w-20 h-[50px]">
+      <span class="absolute top-0 text-[1.25rem] text-gray-800 animate-loaderText loader-text font-semi-bold right-2">
+        Loading
+      </span>
+      <span class="absolute bottom-0 block h-4 w-4 bg-gray-400 rounded-full animate-loaderBar loader-bar">
+        <span class="absolute inset-0 bg-gray-600 rounded-full animate-loaderBarInner"></span>
+      </span>
     </div>
   );
 }

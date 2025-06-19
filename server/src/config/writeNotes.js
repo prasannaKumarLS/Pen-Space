@@ -8,6 +8,7 @@ const writeAndUpdateNotes = async (noteData) => {
     return response;
   } catch (error) {
     console.error("Error writing and updating notes:", error.message);
+    throw error;
   }
 };
 

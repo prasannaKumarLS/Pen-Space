@@ -1,54 +1,62 @@
-import { useState, useReducer } from "react";
+import { useState, useReducer, useEffect } from "react";
 import NoteTile from "../components/noteTile";
 import RichTextEditorWrapper from "../components/richTextEditorWrapper.jsx";
 import AddNoteButton from "../components/addNoteButton";
-import { writeNotes } from "../services/notesServices.js";
+import { writeNotes, uploadNotes } from "../services/notesServices.js";
 import LoadingCard from "../utils/loadingCard.jsx";
 import TitleInput from "../components/noteTitleInput.jsx";
-
-const dummy = [
-  {
-    id: 1,
-    title: "Draft",
-    category: "Marketing",
-    summary:
-      "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
-    modifiedOn: "2025-06-12T08:26:57.750Z",
-  },
-  {
-    id: 2,
-    title: "React JS",
-    category: "Web Development",
-    summary:
-      "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
-    modifiedOn: "2025-06-11T08:26:57.750Z",
-  },
-  {
-    id: 3,
-    title: "Draft",
-    category: "Marketing",
-    summary:
-      "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
-    modifiedOn: "2025-06-10T08:26:57.750Z",
-  },
-  {
-    id: 4,
-    title: "React JS",
-    category: "Web Development",
-    summary:
-      "This is a JavaScript ES6 feature called object destructuring in the function parameters of .map().",
-    modifiedOn: "2025-05-12T08:26:57.750Z",
-  },
-];
+import { getNotes } from "../services/notesServices.js";
 
 export default function HomePage(props) {
   const username = props.username;
-  const [notes, dispatch] = useReducer(notesReducer, dummy);
-  const [selectedNoteId, setSelectedNoteId] = useState(notes[0].id);
-  const [isCardLoading, setIsCardLoading] = useState(false);
+  const [notes, dispatch] = useReducer(notesReducer, []);
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
+  const [loadingCheck, setIsLoadingCheck] = useState({
+    isCardLoading: false,
+    isRTELoading: false,
+  });
+
+  useEffect(() => {
+    const noteContent = async () => {
+      const response = await getNotes({
+        TYPE: "NOTES",
+        username: username,
+        isActive: true,
+      });
+      console.log(response);
+      if (response.error) {
+        return console.log("Failed to load notes");
+      }
+      if (response.length > 0) {
+        dispatch({
+          type: "LOAD",
+          payload: response.map((item) => {
+            const formattedDate = new Date(item.modifiedOn).toLocaleString();
+            return {
+              ...item,
+              modifiedOn: formattedDate,
+            };
+          }),
+        });
+      } else {
+        console.log("create entered");
+
+        handleAddNoteClick("CREATE");
+      }
+    };
+    noteContent();
+  }, []);
+
+  useEffect(() => {
+    if (notes.length > 0 && !selectedNoteId)
+      return setSelectedNoteId(notes[0].id);
+  }, [notes, selectedNoteId]);
 
   function notesReducer(state, action) {
     switch (action.type) {
+      case "LOAD": {
+        return [...action.payload];
+      }
       case "ADD": {
         return [action.payload, ...state];
       }
@@ -66,24 +74,64 @@ export default function HomePage(props) {
     }
   }
 
-  async function handleAddNoteClick(type) {
-    setIsCardLoading(true);
-    if (type === "CREATE") {
-      const response = await writeNotes({
-        username,
-        title: "Untitled Draft",
-        isActive: true,
-      });
-      if (response.error) {
-        return console.log("Failed to write notes");
+  async function handleAddNoteClick(type, event) {
+    setIsLoadingCheck((prev) => {
+      return {
+        ...prev,
+        isCardLoading: true,
+      };
+    });
+    try {
+      let payload;
+      switch (type) {
+        case "CREATE": {
+          const response = await writeNotes({
+            username,
+            title: "Untitled Draft",
+            isActive: true,
+          });
+          if (response.error) {
+            return console.error("Failed to write notes");
+          }
+          payload = response;
+          break;
+        }
+        case "UPLOAD": {
+          const file = event.target.files[0];
+          if (!file) {
+            return console.log("File is empty");
+          }
+          const formData = new FormData();
+          formData.append("document", file);     
+          const response = await uploadNotes(formData);
+          if (response.error) {
+            return console.error("Failed to upload notes", response.error);
+          }
+          payload = response;
+          break;
+        }
+        default: {
+          return console.error("Action Type is empty.");
+        }
       }
-      const formattedDate = new Date(response.modifiedOn);
-      dispatch({
-        type: "ADD",
-        payload: { ...response, modifiedOn: formattedDate.toLocaleString() },
+      if (payload) {
+        const formattedDate = new Date(payload.modifiedOn).toLocaleString();
+        dispatch({
+          type: "ADD",
+          payload: {
+            ...payload,
+            modifiedOn: formattedDate,
+          },
+        });
+      }
+    } finally {
+      setIsLoadingCheck((prev) => {
+        return {
+          ...prev,
+          isCardLoading: false,
+        };
       });
     }
-    return setIsCardLoading(false);
   }
 
   function updateNotesOnDebounce(response) {
@@ -108,11 +156,11 @@ export default function HomePage(props) {
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#E7EFFC]">
-      <section className="p-4 overflow-y-auto ml-1 " style={{ width: "19%" }}>
-        <div className="flex flex-col gap-4 overlow-y-auto">
+    <div className="flex h-screen w-full bg-[#00000071]">
+      <section className="p-4 overflow-y-auto ml-1 scrollbar-thin scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full" style={{ width: "23%" }}>
+        <div className="flex flex-col gap-4 overlow-y-auto ">
           <AddNoteButton addNoteOnClick={handleAddNoteClick} />
-          {isCardLoading && <LoadingCard />}
+          {loadingCheck.isCardLoading && <LoadingCard TYPE="CARD" />}
           {notes.map((item) => (
             <NoteTile
               key={item.id}
@@ -124,6 +172,7 @@ export default function HomePage(props) {
               onClick={() => setSelectedNoteId(item.id)}
               selectedNoteId={selectedNoteId}
               className="noteTile-container"
+              type="HOME_PAGE"
             />
           ))}
         </div>
@@ -132,16 +181,29 @@ export default function HomePage(props) {
         <RichTextEditorWrapper
           selectedNoteId={selectedNoteId}
           updateNotesOnDebounce={updateNotesOnDebounce}
-        />
-        <TitleInput
-          placeholder="Title"
-          value={
-            notes[notes.findIndex((note) => note.id === selectedNoteId)]
-              .title || ""
+          setRTELoading={(value) =>
+            setIsLoadingCheck((prev) => {
+              return {
+                ...prev,
+                isRTELoading: value,
+              };
+            })
           }
-          selectedNoteId={selectedNoteId}
-          handleTitleInput={handleTitleInput}
+          isRteLoading={loadingCheck.isRTELoading}
         />
+        {!loadingCheck.isRTELoading && (
+          <TitleInput
+            placeholder="Title"
+            value={
+              notes.length > 0 && selectedNoteId
+                ? notes[notes.findIndex((note) => note.id === selectedNoteId)]
+                    .title
+                : ""
+            }
+            selectedNoteId={selectedNoteId}
+            handleTitleInput={handleTitleInput}
+          />
+        )}
       </main>
     </div>
   );

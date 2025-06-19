@@ -4,6 +4,7 @@ import { Plus, FileText, UploadCloud } from "lucide-react";
 export default function AddNoteButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const inputFileRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -64,8 +65,12 @@ export default function AddNoteButton(props) {
               <button
                 key={index}
                 onClick={() => {
-                  props.addNoteOnClick(item.type);
-                  setIsOpen(false);
+                  if (item.type === "CREATE") {
+                    props.addNoteOnClick(item.type);
+                    setIsOpen(false);
+                  } else {
+                    inputFileRef.current.click();
+                  }
                 }}
                 className="flex items-center justify-items-start w-full px-3 py-3 text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition-colors duration-150"
                 role="menuitem"
@@ -76,6 +81,15 @@ export default function AddNoteButton(props) {
                 </span>
               </button>
             ))}
+            <input
+              type="file"
+              ref={inputFileRef}
+              style={{ display: "none" }}
+              onChange={(event) => {
+                setIsOpen(false);
+                props.addNoteOnClick("UPLOAD", event);
+              }}
+            />
           </div>
         </div>
       </div>

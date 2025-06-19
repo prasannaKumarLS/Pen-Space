@@ -56,6 +56,7 @@ const NoteEditor = (props) => {
           onChange={(value) => handleSaveNote(value)}
           modules={modules}
           formats={formats}
+          readOnly={props.isReadOnly}
           placeholder="Start writing your note here..."
           style={{ height: "300px", marginBottom: "50px" }}
         />

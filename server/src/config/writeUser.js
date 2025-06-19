@@ -8,6 +8,7 @@ const writeAndUpdateUser = async (userData) => {
     return response;
   } catch (error) {
     console.error("Error writing and updating user:", error.message);
+    throw error;
   }
 };
 

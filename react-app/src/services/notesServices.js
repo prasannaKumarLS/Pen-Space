@@ -33,4 +33,17 @@ const getNotes = async (params) => {
   }
 };
 
-export { writeNotes, getNotes };
+const uploadNotes = async (formData) => {
+  try {
+    const response = await api.post(`${NOTE_PREFIX}/uploadNotes`, formData);
+    return response.data;
+  } catch (error) {
+    return {
+      error:
+        error.response?.data?.error ||
+        "Failed to upload notes. Please try again.",
+    };
+  }
+};
+
+export { writeNotes, getNotes, uploadNotes };

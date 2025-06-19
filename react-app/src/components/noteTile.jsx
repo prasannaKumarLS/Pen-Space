@@ -22,30 +22,37 @@ export default function NoteTile(props) {
         ${
           isActive
             ? "bg-[#6082b6] scale-[1.05] hover:scale-[1.07]"
-            : "bg-white hover:bg-[#F9FAFB] hover:scale-[1.05]"
+            : "bg-white hover:bg-[#f9fbfa] hover:scale-[1.05]"
         }`}
     >
-      <div
-        className={`text-left font-sans text-[1.1rem] font-semibold mb-0  whitespace-nowrap overflow-hidden text-ellipsis
+      <div className="flex-1 flex flex-col gap-2">
+        <div
+          className={`text-left font-sans text-[1.1rem] font-semibold mb-0  whitespace-nowrap overflow-hidden text-ellipsis
         ${isActive ? "text-white" : "text-gray-500"} `}
-      >
-        {props.title}
-      </div>
-      <div className="mt-0 border-b border-gray-200" />
-      <p
-        className={` text-left text-[0.85rem] font-sans overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]
+        >
+          {props.title}
+        </div>
+        <div className="mt-0 border-b border-gray-200" />
+        <p
+          className={` text-left text-[0.85rem] font-sans overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]
         ${isActive ? "text-white" : "text-gray-500"} 
         ${!props.summary && "italic"}
+        ${
+          props.type === "HOME_PAGE"
+            ? " [-webkit-line-clamp:3] "
+            : " [-webkit-line-clamp:8] "
+        }
         `}
-      >
-        {props.summary ||
-          "Summary will get generated once you start writing the content..."}
-      </p>
-      <div className="noteCard-footer flex items-center justify-between mt-2">
+        >
+          {props.summary ||
+            "Summary will get generated once you start writing the content..."}
+        </p>
+      </div>
+      <div className="noteCard-footer flex items-center justify-between mt-0">
         {props.category ? (
           <span
             className={` text-[0.85rem] font-semibold px-2 py-[0.15em] rounded-full transition-colors duration-150
-          ${isActive ? "bg-white text-gray-500" : "bg-[#F0CB6F] text-black"} `}
+          ${isActive ? "bg-white text-gray-500" : "bg-blue-400 text-white"} `}
           >
             {props.category}
           </span>

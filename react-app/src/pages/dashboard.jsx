@@ -3,6 +3,7 @@ import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession
 import HomePage from "./homePage";
 import Sidebar from "../components/sideBar";
 import AllNotesDashboard from "../pages/allNotesDashboard";
+import LoadingCard from "../utils/loadingCard";
 
 export default function Dashboard() {
   const sessionInfo = AuthenticateAndGetSessionInfo();
@@ -11,7 +12,10 @@ export default function Dashboard() {
   const components = [
     <HomePage />,
     <AllNotesDashboard />,
-    <HomePage />,
+    <div className="flex items-center justify-center h-[30px] bg-blue-50">
+      <button>Upload document</button>
+      <input type="file" style={{ display: "none" }} />
+    </div>,
     <HomePage />,
   ];
   useEffect(() => {

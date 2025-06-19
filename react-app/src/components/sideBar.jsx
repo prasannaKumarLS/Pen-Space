@@ -21,7 +21,7 @@ export default function Sidebar(props) {
   ];
 
   return (
-    <div className="flex flex-col items-center py-6  min-h-screen bg-[#FCFFFF]" style={{width: "100px"}}>
+    <div className="flex flex-col items-center py-6  min-h-screen bg-[#00000071]" style={{width: "100px"}}>
       {/* Avatar */}
       <div className="mb-5 flex flex-col items-center">
         <button className="w-12 h-12 rounded-full duration-150 focus:outline-none hover:ring-2 hover:ring-blue-400 hover:ring-offset-3">
