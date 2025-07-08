@@ -14,10 +14,14 @@ export default function HomePage(props) {
   const [loadingCheck, setIsLoadingCheck] = useState({
     isCardLoading: false,
     isRTELoading: false,
+    isNotesQuering: false,
   });
 
   useEffect(() => {
     const noteContent = async () => {
+      setIsLoadingCheck((prev) => {
+        return { ...prev, isNotesQuering: true };
+      });
       const response = await getNotes({
         TYPE: "NOTES",
         username: username,
@@ -37,8 +41,14 @@ export default function HomePage(props) {
             };
           }),
         });
+        setIsLoadingCheck((prev) => {
+          return { ...prev, isNotesQuering: false };
+        });
       } else {
         handleAddNoteClick("CREATE");
+        setIsLoadingCheck((prev) => {
+          return { ...prev, isNotesQuering: false };
+        });
       }
     };
     noteContent();
@@ -154,57 +164,64 @@ export default function HomePage(props) {
 
   return (
     <div className="flex h-screen w-full bg-[#00000071] bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
-      <section
-        className="background-dark-gradient p-4 overflow-y-auto scrollbar-thin pl-4 scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full "
-        style={{ width: "23%" }}
-      >
-        <div className="flex flex-col gap-4 overlow-y-auto">
-          <AddNoteButton addNoteOnClick={handleAddNoteClick} />
-          {loadingCheck.isCardLoading && <LoadingCard TYPE="CARD" />}
-          {notes.map((item) => (
-            <NoteTile
-              key={item.id}
-              noteId={item.id}
-              title={item.title}
-              summary={item.summary}
-              category={item.category}
-              modifiedOn={item.modifiedOn}
-              onClick={() => setSelectedNoteId(item.id)}
+      {loadingCheck.isNotesQuering ? (
+        <LoadingCard TYPE="CARD_SPINNER" />
+      ) : (
+        <>
+          <section
+            className="background-dark-gradient p-4 overflow-y-auto scrollbar-thin pl-4 scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full "
+            style={{ width: "23%" }}
+          >
+            <div className="flex flex-col gap-4 overlow-y-auto">
+              <AddNoteButton addNoteOnClick={handleAddNoteClick} />
+              {loadingCheck.isCardLoading && <LoadingCard TYPE="CARD" />}
+              {notes.map((item) => (
+                <NoteTile
+                  key={item.id}
+                  noteId={item.id}
+                  title={item.title}
+                  summary={item.summary}
+                  category={item.category}
+                  modifiedOn={item.modifiedOn}
+                  onClick={() => setSelectedNoteId(item.id)}
+                  selectedNoteId={selectedNoteId}
+                  className="noteTile-container"
+                  type="HOME_PAGE"
+                />
+              ))}
+            </div>
+          </section>
+          <main className="background-dark-gradient pr-1 w-[100%] relative ">
+            <RichTextEditorWrapper
               selectedNoteId={selectedNoteId}
-              className="noteTile-container"
-              type="HOME_PAGE"
+              updateNotesOnDebounce={updateNotesOnDebounce}
+              setRTELoading={(value) =>
+                setIsLoadingCheck((prev) => {
+                  return {
+                    ...prev,
+                    isRTELoading: value,
+                  };
+                })
+              }
+              isRteLoading={loadingCheck.isRTELoading}
             />
-          ))}
-        </div>
-      </section>
-      <main className="background-dark-gradient pr-1 w-[100%] relative ">
-        <RichTextEditorWrapper
-          selectedNoteId={selectedNoteId}
-          updateNotesOnDebounce={updateNotesOnDebounce}
-          setRTELoading={(value) =>
-            setIsLoadingCheck((prev) => {
-              return {
-                ...prev,
-                isRTELoading: value,
-              };
-            })
-          }
-          isRteLoading={loadingCheck.isRTELoading}
-        />
-        {!loadingCheck.isRTELoading && (
-          <TitleInput
-            placeholder="Title"
-            value={
-              notes.length > 0 && selectedNoteId
-                ? notes[notes.findIndex((note) => note.id === selectedNoteId)]
-                    .title
-                : ""
-            }
-            selectedNoteId={selectedNoteId}
-            handleTitleInput={handleTitleInput}
-          />
-        )}
-      </main>
+            {!loadingCheck.isRTELoading && (
+              <TitleInput
+                placeholder="Title"
+                value={
+                  notes.length > 0 && selectedNoteId
+                    ? notes[
+                        notes.findIndex((note) => note.id === selectedNoteId)
+                      ].title
+                    : ""
+                }
+                selectedNoteId={selectedNoteId}
+                handleTitleInput={handleTitleInput}
+              />
+            )}
+          </main>
+        </>
+      )}
     </div>
   );
 }

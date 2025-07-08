@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { getNotes } from "../services/notesServices";
 import NoteTile from "../components/noteTile";
 import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession";
+import LoadingCard from "../utils/loadingCard";
 
 export default function AllNotesDashboard(props) {
   const sessionInfo = AuthenticateAndGetSessionInfo();
   const [notes, setNotes] = useState([]);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [session, setSession] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchSession() {
@@ -22,13 +24,20 @@ export default function AllNotesDashboard(props) {
         isActive: true,
       });
       if (response.error) {
+        setIsLoading(false);
         return console.log("Failed to get notes");
       }
       setNotes(response);
+      setIsLoading(false);
     };
     noteContent();
   }, [props.username, sessionInfo, session.username]);
-  return (
+
+  return isLoading ? (
+    <div className="bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28] background-dark-gradient w-full">
+      <LoadingCard TYPE="CARD_SPINNER" />
+    </div>
+  ) : (
     <div className="grid grid-cols-4 grid-rows-3 md:grid-cols-3 lg:grid-cols-4 gap-x-[20px] gap-y-[0px] p-6 bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28] background-dark-gradient w-full">
       {notes.map((item) => (
         <NoteTile
