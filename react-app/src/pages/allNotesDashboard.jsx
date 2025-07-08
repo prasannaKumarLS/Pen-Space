@@ -29,7 +29,7 @@ export default function AllNotesDashboard(props) {
     noteContent();
   }, [props.username, sessionInfo, session.username]);
   return (
-    <div className="grid grid-cols-4 grid-rows-3 md:grid-cols-3 lg:grid-cols-4 gap-x-[20px] gap-y-[0px] p-6 bg-[#00000071] w-full">
+    <div className="grid grid-cols-4 grid-rows-3 md:grid-cols-3 lg:grid-cols-4 gap-x-[20px] gap-y-[0px] p-6 bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28] background-dark-gradient w-full">
       {notes.map((item) => (
         <NoteTile
           key={item.id}

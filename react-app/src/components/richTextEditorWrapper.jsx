@@ -10,11 +10,15 @@ export default function RichTextEditorWrapper(props) {
   const previousRteContent = useRef("");
   const [isSaving, setIsSaving] = useState(false);
   const deBounceTimer = useRef(null);
-  const { selectedNoteId, isRteLoading, setRTELoading } = props;
+  const { selectedNoteId, isRteLoading, setRTELoading, updateNotesOnDebounce } =
+    props;
 
   useEffect(() => {
     const noteContent = async () => {
       setRTELoading(true);
+      if (!selectedNoteId) {
+        return setRTELoading(false);
+      }
       const response = await getNotes({
         id: selectedNoteId,
         TYPE: "SUB_CONTENT",
@@ -22,11 +26,13 @@ export default function RichTextEditorWrapper(props) {
       if (response.error) {
         setRTEcontent("");
         previousRteContent.current = "";
+        setRTELoading(false);
         return console.log("Failed to get notes");
       }
       if (!response || !response[0]) {
         setRTEcontent("");
         previousRteContent.current = "";
+        setRTELoading(false);
         return;
       }
       setRTEcontent(response[0].notes);
@@ -55,10 +61,9 @@ export default function RichTextEditorWrapper(props) {
         setIsSaving(false);
         return console.log("Failed to save notes");
       }
-      console.log("Response during debounce: ", response);
-      props.updateNotesOnDebounce(response);
-      previousRteContent.current = rteContent;
       setIsSaving(false);
+      updateNotesOnDebounce(response);
+      previousRteContent.current = rteContent;
     }, 3000);
     return () => clearTimeout(deBounceTimer.current);
   }, [rteContent, selectedNoteId]);

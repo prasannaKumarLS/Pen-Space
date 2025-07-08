@@ -32,7 +32,7 @@ export default function NoteTitleInput(props) {
             focus:border-blue-500
             text-[1.5rem]
             font-bold
-            text-gray-800
+            text-white
             py-2
             focus:outline-none
             focus:ring-0

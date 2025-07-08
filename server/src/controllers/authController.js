@@ -38,13 +38,17 @@ const signIn = async (req, res) => {
       .json({ error: "Username and password are required" });
   }
   try {
-    const users = await getUsers({ username: username });
+    const users = await getUsers({ username: username, isActive: true });
     if (!users.length) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
     const match = await bcrypt.compare(password, users[0].hashPassword);
     if (match) {
-      const token = await generateToken({ username, name: users[0].name });
+      const token = await generateToken({
+        username,
+        name: users[0].name,
+        userId: users[0].id,
+      });
       return res.status(200).json({
         message: `User authenticated successfully`,
         token,

@@ -12,6 +12,7 @@ const writeAndUpdateNotes = async (req, res) => {
       return {
         ...note,
         username: req.user.username,
+        userId: req.user.userId,
         isActive: notesData.isActive || true,
       };
     });
@@ -26,7 +27,8 @@ const writeAndUpdateNotes = async (req, res) => {
 
 const getNotes = async (req, res) => {
   const params = req.query;
-  if (!params) return res.status(400).json({ error: "Params are empty" });
+  if (!params)
+    return res.status(400).json({ error: "Note ID is required" });
   try {
     const updatedParams =
       params.TYPE === "NOTES"

@@ -55,6 +55,10 @@ module.exports = {
           "90%": { width: "80%", transform: "translateX(15px)" },
           "100%": { transform: "translateX(0px)", width: "16px" },
         },
+        blinkingCursor: {
+          "0%, 50%": { opacity: "1" },
+          "51%, 100%": { opacity: "0" },
+        },
       },
       animation: {
         slideIn: "slideIn 0.5s ease-out backwards",
@@ -62,11 +66,12 @@ module.exports = {
         "fade-in-down": "fadeInDown 0.3s ease-out",
         "fade-out-delay": "fadeOut 0.5s ease-in-out 3.5s forwards",
         "progress-bar": "progressShrink 4s linear forwards",
-        shimmer: "shimmer 1.5s infinite linear",
+        shimmer: "shimmer 2s infinite linear",
         "pulse-spin": "pulse-spin 2s ease-in-out infinite",
         loaderText: "loaderText 3.5s ease-in-out infinite both",
         loaderBar: "loaderBar 3.5s ease-in-out infinite both",
         loaderBarInner: "loaderBarInner 3.5s ease-in-out infinite both",
+        blinkingCursor: "blinkingCursor 1.1s steps(1) infinite",
       },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],

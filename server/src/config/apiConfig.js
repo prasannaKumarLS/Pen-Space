@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const METHODS_WITH_BODY = ["POST", "PUT", "PATCH", "DELETE"];
+
 const fetchApi = async (
   endpoint,
   method = "GET",
@@ -7,17 +9,21 @@ const fetchApi = async (
   params = null,
   customHeaders = {}
 ) => {
+  const hasBody = METHODS_WITH_BODY.includes(method.toUpperCase());
   try {
     const response = await axios({
       method,
       url: `${process.env.APPIAN_BASE_URL}${endpoint}`,
-      data,
+      ...(hasBody && { data }),
       headers: {
-        "Content-Type": "application/json",
-        "appian-api-key": process.env.APPIAN_API_KEY,
+        // "appian-api-key": process.env.APPIAN_API_KEY,
         ...customHeaders,
       },
-      params: params,
+      auth: {
+        username: process.env.APPIAN_USERNAME,
+        password: process.env.APPIAN_PASSWORD,
+      },
+      params,
     });
     return response.data;
   } catch (error) {

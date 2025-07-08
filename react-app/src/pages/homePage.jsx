@@ -23,7 +23,6 @@ export default function HomePage(props) {
         username: username,
         isActive: true,
       });
-      console.log(response);
       if (response.error) {
         return console.log("Failed to load notes");
       }
@@ -39,13 +38,11 @@ export default function HomePage(props) {
           }),
         });
       } else {
-        console.log("create entered");
-
         handleAddNoteClick("CREATE");
       }
     };
     noteContent();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     if (notes.length > 0 && !selectedNoteId)
@@ -102,7 +99,7 @@ export default function HomePage(props) {
             return console.log("File is empty");
           }
           const formData = new FormData();
-          formData.append("document", file);     
+          formData.append("document", file);
           const response = await uploadNotes(formData);
           if (response.error) {
             return console.error("Failed to upload notes", response.error);
@@ -156,9 +153,12 @@ export default function HomePage(props) {
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#00000071]">
-      <section className="p-4 overflow-y-auto ml-1 scrollbar-thin scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full" style={{ width: "23%" }}>
-        <div className="flex flex-col gap-4 overlow-y-auto ">
+    <div className="flex h-screen w-full bg-[#00000071] bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
+      <section
+        className="background-dark-gradient p-4 overflow-y-auto scrollbar-thin pl-4 scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full "
+        style={{ width: "23%" }}
+      >
+        <div className="flex flex-col gap-4 overlow-y-auto">
           <AddNoteButton addNoteOnClick={handleAddNoteClick} />
           {loadingCheck.isCardLoading && <LoadingCard TYPE="CARD" />}
           {notes.map((item) => (
@@ -177,7 +177,7 @@ export default function HomePage(props) {
           ))}
         </div>
       </section>
-      <main className="pr-1 w-[100%] relative ">
+      <main className="background-dark-gradient pr-1 w-[100%] relative ">
         <RichTextEditorWrapper
           selectedNoteId={selectedNoteId}
           updateNotesOnDebounce={updateNotesOnDebounce}
