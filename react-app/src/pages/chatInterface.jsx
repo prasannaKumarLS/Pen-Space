@@ -78,7 +78,7 @@ export default function ChatTypewriter(props) {
         id: temporaryId,
         payload: { answer: answer.slice(0, i + 1) },
       });
-      i++;
+      i += 2;
       scrollToBottom();
       if (i < answer.length) {
         typewriterTimeout.current = setTimeout(typeChar, 18);
@@ -125,14 +125,8 @@ export default function ChatTypewriter(props) {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#00000071] bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
-      <div className="p-3 ml-3 bg-transparent text-white">
-        <h2 className="text-2xl text-white tracking-wide animate-slideIn">
-          P<span className="text-white">é</span>n Spac
-          <span className="text-white">é Chat</span>
-        </h2>
-      </div>
-      <div className="flex flex-col flex-grow max-w-7xl mx-auto my-auto bg-transparent overflow-hidden h-[90vh] w-full">
+    <div className="flex flex-col h-screen w-screen ">
+      <div className="flex flex-col flex-grow max-w-[100rem] mx-auto my-auto bg-transparent overflow-hidden h-[90vh] w-full">
         <div className="flex-grow p-4 overflow-y-auto bg-transparent scrollbar-thin pl-4 scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full">
           {chatMessages.map((data, id) => (
             <MessageBubble key={id} data={data} />

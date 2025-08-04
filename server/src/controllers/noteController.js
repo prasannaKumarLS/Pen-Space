@@ -4,7 +4,7 @@ import uploadNotes from "../config/uploadDocument.js";
 import FormData from "form-data";
 
 const writeAndUpdateNotes = async (req, res) => {
-  const notesData = req.body;
+  const notesData = req.body;    
   if (!notesData) return res.status(400).json({ error: "Notes Data is empty" });
   try {
     const notesArray = Array.isArray(notesData) ? notesData : [notesData];
@@ -13,9 +13,9 @@ const writeAndUpdateNotes = async (req, res) => {
         ...note,
         username: req.user.username,
         userId: req.user.userId,
-        isActive: notesData.isActive || true,
+        isActive: note.isActive ?? true,
       };
-    });
+    }); 
     const response = await writeNotes(updatedNotes);
     res.status(200).json(response);
   } catch (err) {

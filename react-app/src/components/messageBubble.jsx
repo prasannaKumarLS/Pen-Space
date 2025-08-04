@@ -7,7 +7,7 @@ export default function MessageBubble(props) {
       {data.question && (
         <div className={`flex gap-1 justify-end mb-4`}>
           <div
-            className={`max-w-xs lg:max-w-md px-4 py-3 shadow-md bg-gray-700 text-gray-100 rounded-full`}
+            className={`max-w-sm lg:max-w-md px-4 py-3 shadow-md bg-slate-700 text-gray-100 rounded-full`}
           >
             <span
               style={{ whiteSpace: "pre-line" }}
@@ -22,7 +22,7 @@ export default function MessageBubble(props) {
         <div className={`flex gap-1 justify-start mb-4`}>
           <AIIconSparkle />
           <div
-            className={`max-w-2xl lg:max-w-2xl px-4 py-3 shadow-md bg-blue-600 text-white rounded-3xl`}
+            className={`max-w-3xl lg:max-w-3xl px-4 py-3 shadow-md bg-gray-700 text-white rounded-3xl`}
           >
             <span
               style={{ whiteSpace: "pre-line" }}

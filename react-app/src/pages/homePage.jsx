@@ -7,6 +7,28 @@ import LoadingCard from "../utils/loadingCard.jsx";
 import TitleInput from "../components/noteTitleInput.jsx";
 import { getNotes } from "../services/notesServices.js";
 
+function notesReducer(state, action) {
+  switch (action.type) {
+    case "LOAD": {
+      return [...action.payload];
+    }
+    case "ADD": {
+      return [action.payload, ...state];
+    }
+    case "UPDATE": {
+      return state.map((item) =>
+        item.id === action.noteId ? { ...item, ...action.payload } : item
+      );
+    }
+    case "REMOVE": {
+      return state.filter((item) => item.id !== action.noteId);
+    }
+    default: {
+      return state;
+    }
+  }
+}
+
 export default function HomePage(props) {
   const username = props.username;
   const [notes, dispatch] = useReducer(notesReducer, []);
@@ -58,28 +80,6 @@ export default function HomePage(props) {
     if (notes.length > 0 && !selectedNoteId)
       return setSelectedNoteId(notes[0].id);
   }, [notes, selectedNoteId]);
-
-  function notesReducer(state, action) {
-    switch (action.type) {
-      case "LOAD": {
-        return [...action.payload];
-      }
-      case "ADD": {
-        return [action.payload, ...state];
-      }
-      case "UPDATE": {
-        return state.map((item) =>
-          item.id === action.noteId ? { ...item, ...action.payload } : item
-        );
-      }
-      case "REMOVE": {
-        return state.filter((item) => item.id !== action.noteId);
-      }
-      default: {
-        return state;
-      }
-    }
-  }
 
   async function handleAddNoteClick(type, event) {
     setIsLoadingCheck((prev) => {
@@ -162,14 +162,30 @@ export default function HomePage(props) {
     });
   }
 
+  async function handleOnDelete(noteId) {
+    const response = await writeNotes({
+      id: noteId,
+      isActive: false,
+    });
+    if (response.error) {
+      return console.error("Failed to delete notes");
+    }
+    dispatch({
+      type: "REMOVE",
+      noteId,
+    });
+    return setSelectedNoteId(null);
+  }
+
   return (
-    <div className="flex h-screen w-full bg-[#00000071] bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
+    <div className="flex w-full h-screen">
       {loadingCheck.isNotesQuering ? (
         <LoadingCard TYPE="CARD_SPINNER" />
       ) : (
         <>
           <section
-            className="background-dark-gradient p-4 overflow-y-auto scrollbar-thin pl-4 scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full "
+            className="pl-6 pt-3 overflow-y-auto scrollbar-thin scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full h-[93vh]"
+            // Add the height while converting to Navigation Bar h-[93vh]
             style={{ width: "23%" }}
           >
             <div className="flex flex-col gap-4 overlow-y-auto">
@@ -184,6 +200,7 @@ export default function HomePage(props) {
                   category={item.category}
                   modifiedOn={item.modifiedOn}
                   onClick={() => setSelectedNoteId(item.id)}
+                  onDelete={handleOnDelete}
                   selectedNoteId={selectedNoteId}
                   className="noteTile-container"
                   type="HOME_PAGE"
@@ -191,7 +208,7 @@ export default function HomePage(props) {
               ))}
             </div>
           </section>
-          <main className="background-dark-gradient pr-1 w-[100%] relative ">
+          <main className="pr-1 w-[100%] relative">
             <RichTextEditorWrapper
               selectedNoteId={selectedNoteId}
               updateNotesOnDebounce={updateNotesOnDebounce}

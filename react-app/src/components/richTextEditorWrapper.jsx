@@ -69,11 +69,11 @@ export default function RichTextEditorWrapper(props) {
   }, [rteContent, selectedNoteId]);
 
   return isRteLoading ? (
-    <div className="flex items-center justify-center h-[95vh] w-full">
+    <div className="flex items-center justify-center h-screen w-full">
       <LoadingCard TYPE="CARD_SPINNER" />
     </div>
   ) : (
-    <div className="relative w-full h-screen]">
+    <div className="relative w-full">
       {isSaving && (
         <div
           className="absolute top-[30px] right-[30px] z-10"

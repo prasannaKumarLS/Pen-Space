@@ -22,7 +22,7 @@ export default function Sidebar(props) {
 
   return (
     <div
-      className="flex flex-col items-center py-6 min-h-screen bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]"
+      className="flex flex-col items-center py-6 min-h-screen background-dark-gradient"
       style={{ width: "100px" }}
     >
       <div className="mb-5 flex flex-col items-center">

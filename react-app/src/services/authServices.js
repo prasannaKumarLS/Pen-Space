@@ -50,7 +50,7 @@ const signUp = async (userData) => {
 
 const logout = async () => {
   try {
-    await api.post(`${AUTH_PREFIX}/logout`);
+    localStorage.removeItem("token");
     return { message: "Logged out successfully" };
   } catch (error) {
     return {

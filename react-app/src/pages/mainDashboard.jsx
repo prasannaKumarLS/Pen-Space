@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession";
 import HomePage from "./homePage";
-import Sidebar from "../components/sideBar";
-import AllNotesDashboard from "../pages/allNotesDashboard";
+import Sidebar from "./sideBar";
+import NotesGrid from "./notesGrid";
 import ChatInterface from "./chatInterface";
+import NavigationBar from "./navigationBar";
 
 export default function Dashboard() {
   const sessionInfo = AuthenticateAndGetSessionInfo();
@@ -11,7 +12,7 @@ export default function Dashboard() {
   const [activeSideBar, setActiveSideBar] = useState(0);
   const components = [
     <HomePage />,
-    <AllNotesDashboard />,
+    <NotesGrid />,
     <ChatInterface name={session.name} />,
     <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-[#18181b] via-[#232326] to-[#2a3040]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_10%,rgba(255,255,255,0.10)_0%,transparent_70%)]" />
@@ -34,8 +35,8 @@ export default function Dashboard() {
   }, [sessionInfo]);
 
   return (
-    <main className="flex flex-row h-screen w-full">
-      <Sidebar
+    <main className="flex flex-col h-screen w-full bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
+      <NavigationBar
         name={session.name}
         handleSideBar={(index) => setActiveSideBar(index)}
         activeSideBar={activeSideBar}

@@ -32,7 +32,7 @@ export default function AddNoteButton(props) {
   ];
 
   return (
-    <div className="flex justify-end font-[Gill Sans] z-[2]">
+    <div className="flex justify-end font-[Gill Sans] z-[2] pr-2">
       <div ref={dropdownRef} className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
