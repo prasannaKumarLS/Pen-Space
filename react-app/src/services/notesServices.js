@@ -46,4 +46,21 @@ const uploadNotes = async (formData) => {
   }
 };
 
-export { writeNotes, getNotes, uploadNotes };
+const generateNoteDocument = async (params) => {
+  try {
+    const response = await api.post(
+      `${NOTE_PREFIX}/generateDocument`,
+      {},
+      { params, responseType: "blob" }
+    );
+    return response.data;
+  } catch (error) {
+    return {
+      error:
+        error.response?.data?.error ||
+        "Failed to generate document. Please try again.",
+    };
+  }
+};
+
+export { writeNotes, getNotes, uploadNotes, generateNoteDocument };

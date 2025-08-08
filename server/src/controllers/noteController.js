@@ -2,9 +2,10 @@ import writeNotes from "../config/writeNotes.js";
 import queryNotes from "../config/getNotes.js";
 import uploadNotes from "../config/uploadDocument.js";
 import FormData from "form-data";
+import generateDocument from "../config/generateNoteDocument.js";
 
 const writeAndUpdateNotes = async (req, res) => {
-  const notesData = req.body;    
+  const notesData = req.body;
   if (!notesData) return res.status(400).json({ error: "Notes Data is empty" });
   try {
     const notesArray = Array.isArray(notesData) ? notesData : [notesData];
@@ -15,7 +16,7 @@ const writeAndUpdateNotes = async (req, res) => {
         userId: req.user.userId,
         isActive: note.isActive ?? true,
       };
-    }); 
+    });
     const response = await writeNotes(updatedNotes);
     res.status(200).json(response);
   } catch (err) {
@@ -27,8 +28,7 @@ const writeAndUpdateNotes = async (req, res) => {
 
 const getNotes = async (req, res) => {
   const params = req.query;
-  if (!params)
-    return res.status(400).json({ error: "Note ID is required" });
+  if (!params) return res.status(400).json({ error: "Note ID is required" });
   try {
     const updatedParams =
       params.TYPE === "NOTES"
@@ -57,4 +57,37 @@ const uploadAndWriteNotes = async (req, res) => {
   }
 };
 
-export { writeAndUpdateNotes, getNotes, uploadAndWriteNotes };
+const generateNoteDocument = async (req, res) => {
+  const { query } = req;
+  console.log(query);
+  const getTimestamp = () => {
+    const date = new Date();
+    return (
+      date.toISOString().slice(0, 10).replace(/-/g, "") +
+      "_" +
+      date.toTimeString().slice(0, 5).replace(":", "")
+    );
+  };
+  if (!query) return res.status(400).json({ error: "Note ID is required" });
+  try {
+    const response = await generateDocument(query);
+    console.log(response);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `Exported_Document_Pen_Space_${getTimestamp()}.pdf`
+    );
+    return response.pipe(res);
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: `Dcument generation failed : ${err.message}` });
+  }
+};
+
+export {
+  writeAndUpdateNotes,
+  getNotes,
+  uploadAndWriteNotes,
+  generateNoteDocument,
+};

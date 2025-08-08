@@ -1,4 +1,8 @@
-export default function InlineMessageCard({ message, type = "SUCCESS" }) {
+export default function InlineMessageCard({
+  message,
+  type = "SUCCESS",
+  isCompact,
+}) {
   const isSuccess = type === "SUCCESS";
 
   const bgColor = isSuccess ? "bg-green-100" : "bg-rose-100";
@@ -8,7 +12,11 @@ export default function InlineMessageCard({ message, type = "SUCCESS" }) {
 
   return (
     <div
-      className={`relative w-full ${bgColor} ${borderColor} ${textColor} px-4 py-2 rounded shadow-sm mt-1 mb-0.5 border animate-fade-out-delay`}
+      className={`relative w-full ${bgColor} ${borderColor} ${textColor} ${
+        isCompact ? "px-2" : "px-4"
+      } ${
+        isCompact ? "py-1" : "py-2"
+      }  rounded shadow-sm mt-1 mb-0.5 border animate-fade-out-delay`}
     >
       <strong className="font-medium text-sm">{message}</strong>
       <div

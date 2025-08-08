@@ -76,7 +76,7 @@ export default function RichTextEditorWrapper(props) {
     <div className="relative w-full">
       {isSaving && (
         <div
-          className="absolute top-[30px] right-[30px] z-10"
+          className="absolute top-[30px] right-[120px] z-10"
           title="Saving..."
         >
           <RefreshCcw className="w-5 h-5 text-gray-400 animate-pulse-spin" />

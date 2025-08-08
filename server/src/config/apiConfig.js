@@ -7,7 +7,8 @@ const fetchApi = async (
   method = "GET",
   data = null,
   params = null,
-  customHeaders = {}
+  customHeaders = {},
+  responseType = "json"
 ) => {
   const hasBody = METHODS_WITH_BODY.includes(method.toUpperCase());
   try {
@@ -24,6 +25,7 @@ const fetchApi = async (
         password: process.env.APPIAN_PASSWORD,
       },
       params,
+      responseType,
     });
     return response.data;
   } catch (error) {

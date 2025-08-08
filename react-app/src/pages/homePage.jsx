@@ -6,6 +6,7 @@ import { writeNotes, uploadNotes } from "../services/notesServices.js";
 import LoadingCard from "../utils/loadingCard.jsx";
 import TitleInput from "../components/noteTitleInput.jsx";
 import { getNotes } from "../services/notesServices.js";
+import ExportNoteDocument from "../components/exportNote.jsx";
 
 function notesReducer(state, action) {
   switch (action.type) {
@@ -223,18 +224,21 @@ export default function HomePage(props) {
               isRteLoading={loadingCheck.isRTELoading}
             />
             {!loadingCheck.isRTELoading && (
-              <TitleInput
-                placeholder="Title"
-                value={
-                  notes.length > 0 && selectedNoteId
-                    ? notes[
-                        notes.findIndex((note) => note.id === selectedNoteId)
-                      ].title
-                    : ""
-                }
-                selectedNoteId={selectedNoteId}
-                handleTitleInput={handleTitleInput}
-              />
+              <>
+                <TitleInput
+                  placeholder="Title"
+                  value={
+                    notes.length > 0 && selectedNoteId
+                      ? notes[
+                          notes.findIndex((note) => note.id === selectedNoteId)
+                        ].title
+                      : ""
+                  }
+                  selectedNoteId={selectedNoteId}
+                  handleTitleInput={handleTitleInput}
+                />
+                <ExportNoteDocument noteId={selectedNoteId} />
+              </>
             )}
           </main>
         </>

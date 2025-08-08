@@ -6,8 +6,10 @@ import {
   LogOut,
   Settings,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { logout } from "../services/authServices";
+import logo from "../assets/PenSpaceLogo.png";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
@@ -22,26 +24,52 @@ const menuItems = [
   },
 ];
 
+const sideBars = [
+  {
+    icon: Home,
+    name: "Home",
+  },
+  {
+    icon: TextIcon,
+    name: "Notes",
+  },
+  {
+    icon: MessageCircle,
+    name: "Chat",
+  },
+  {
+    icon: Grid2X2,
+    name: "Style",
+  },
+];
+
 export default function NavigationBar(props) {
+  const { handleSideBar } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const sideBars = [
-    {
-      icon: Home,
-      name: "Home",
-    },
-    {
-      icon: TextIcon,
-      name: "Notes",
-    },
-    {
-      icon: MessageCircle,
-      name: "Chat",
-    },
-    {
-      icon: Grid2X2,
-      name: "Style",
-    },
-  ];
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside); //Mount listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); //Unmount listener
+    };
+  }, []);
+
+  async function handleMenuClick(action) {
+    if (action === "LOGOUT") {
+      const response = await logout();
+      if (response.error) {
+        return console.log("Error while logging out : ", response.error);
+      }
+      navigate("/");
+    }
+  }
 
   return (
     <div
@@ -49,9 +77,12 @@ export default function NavigationBar(props) {
       style={{ width: "100px" }}
     >
       <div className="flex flex-row items-center p-2 w-[250px]">
-        <button className="rounded-full overflow-hidden w-11 h-11">
+        <button
+          className="rounded-full overflow-hidden w-11 h-11"
+          onClick={() => handleSideBar(0)}
+        >
           <img
-            src="/src/assets/PenSpaceLogo.png"
+            src={logo}
             alt="App Logo"
             className="w-full h-full object-contain"
           />
@@ -70,13 +101,12 @@ export default function NavigationBar(props) {
           return (
             <div key={index}>
               <button
-                key={index}
                 className={`p-[6px] rounded-full ease-in-out active:scale-95 duration-200 shadow-md ${
                   isActive
                     ? "bg-[#0A7AFF] scale-125 hover:scale-[1.25] "
                     : "bg-[#1a1e28] scale-125 hover:scale-[1.25] hover:bg-[#8e90a157]"
                 } `}
-                onClick={() => props.handleSideBar(index)}
+                onClick={() => handleSideBar(index)}
               >
                 <div className={`flex flex-row gap-1  ${isActive ? "" : ""}`}>
                   <Icon
@@ -97,11 +127,12 @@ export default function NavigationBar(props) {
           );
         })}
       </nav>
-      <div className="relative">
+      <div className="relative z-10" ref={dropdownRef}>
         <div className="flex flex-col items-center p-1">
           <button
             className="w-7 h-7 rounded-full duration-150 focus:outline-none hover:ring-2 hover:ring-[#80BFFF] hover:ring-offset-3"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Open profile menu"
             aria-haspopup="true"
             aria-expanded={isOpen}
           >
@@ -131,11 +162,7 @@ export default function NavigationBar(props) {
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  if (item.action === "LOGOUT") {
-                    logout();
-                  }
-                }}
+                onClick={() => handleMenuClick(item.action)}
                 className="flex items-center justify-items-start w-full px-2 py-2 text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition-colors duration-150"
                 role="menuitem"
               >
