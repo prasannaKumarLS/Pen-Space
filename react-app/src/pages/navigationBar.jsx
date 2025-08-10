@@ -9,6 +9,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { logout } from "../services/authServices";
 import logo from "../assets/PenSpaceLogo.png";
+import avatar from "../assets/cat.png";
 import { useNavigate } from "react-router-dom";
 
 const menuItems = [
@@ -128,23 +129,20 @@ export default function NavigationBar(props) {
         })}
       </nav>
       <div className="relative z-10" ref={dropdownRef}>
-        <div className="flex flex-col items-center p-1">
+        <div className="flex flex-col items-center p-3">
           <button
-            className="w-7 h-7 rounded-full duration-150 focus:outline-none hover:ring-2 hover:ring-[#80BFFF] hover:ring-offset-3"
+            className="w-9 h-9 rounded-full duration-150 focus:outline-none hover:ring-2 hover:ring-[#80BFFF] hover:ring-offset-3"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Open profile menu"
             aria-haspopup="true"
             aria-expanded={isOpen}
           >
             <img
-              src="https://www.kindpng.com/picc/m/780-7804962_cartoon-avatar-png-image-transparent-avatar-user-image.png"
+              src={avatar}
               alt="User Avatar"
               className="w-full h-full object-cover rounded-full"
             />
           </button>
-          <span className="text-center text-white font-semibold mb-0 text-[1rem] max-w-[100px] break-words leading-tight">
-            {props.name}
-          </span>
         </div>
         <div
           className={`absolute top-full mt-0 right-0 w-40 bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 ease-in-out origin-top-right

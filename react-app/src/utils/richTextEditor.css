@@ -80,11 +80,11 @@
 }
 
 .ql-toolbar.ql-snow .ql-picker:hover .ql-picker-label {
-  color: white; 
+  color: white;
 }
 
 .ql-toolbar.ql-snow .ql-picker.ql-active .ql-picker-label {
-  color: white; 
+  color: white;
 }
 
 .ql-toolbar.ql-snow .ql-picker-label .ql-stroke,
@@ -155,6 +155,9 @@
   color: white;
 }
 
+.ql-editor.ql-blank::before {
+  color: white;
+}
 
 .ql-editor::before {
   margin: 0px 25px;

@@ -17,6 +17,8 @@ const message = {
   type: "",
 };
 
+const maxCharForName = 15;
+
 export default function SignIn() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(userInfo);
@@ -97,6 +99,7 @@ export default function SignIn() {
               value={userData.name}
               field="fullName"
               name="Name"
+              maxChar={maxCharForName}
             />
           </>
         )}
@@ -114,7 +117,12 @@ export default function SignIn() {
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition mb-4"
+          disabled={userData.name.length > maxCharForName}
+          className={`w-full  text-white py-2 rounded-md transition mb-4 ${
+            userData.name.length > maxCharForName
+              ? "bg-gray-700"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
           {isSignUp ? "Sign Up" : "Sign In"}
         </button>
