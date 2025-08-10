@@ -87,7 +87,7 @@ export default function NavigationBar(props) {
             className="w-full h-full object-contain"
           />
         </button>
-        <div className="p-3 bg-transparent text-white">
+        <div className="p-2 bg-transparent text-white">
           <h2 className="text-2xl text-white tracking-wide animate-slideIn">
             P<span className="text-white">é</span>n Spac
             <span className="text-white">é</span>

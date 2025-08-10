@@ -27,7 +27,7 @@ export default function ExportNoteDocument(props) {
       setTimeout(() => {
         setIsError(false);
       }, 3000);
-      setIsLoading(false);
+      return setIsLoading(false);
     }
     const fileURL = window.URL.createObjectURL(response);
     const link = document.createElement("a");
@@ -46,7 +46,7 @@ export default function ExportNoteDocument(props) {
             className={`flex flex-row gap-1 text-[0.85rem] font-semibold px-3 py-[0.4em] rounded-full shadow-sm transition-colors duration-200 ease-in-out
         ${
           isLoading
-            ? "bg-green-500 text-white cursor-wait"
+            ? "bg-green-500 text-white"
             : "bg-white text-black hover:bg-blue-500 hover:text-white"
         }`}
           >
