@@ -2,6 +2,34 @@ import api from "./api.js";
 
 const AUTH_PREFIX = "/login";
 
+const getUser = async (params) => {
+  try {
+    const response = await api.get(`${AUTH_PREFIX}/getUser`, {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    return {
+      error:
+        error.response?.data?.error ||
+        "Failed to fetch Users. Please try again.",
+    };
+  }
+};
+
+const writeUser = async (userData) => {
+  try {
+    const response = await api.post(`${AUTH_PREFIX}/writeUser`, userData);
+    return response.data;
+  } catch (error) {
+    return {
+      error:
+        error.response?.data?.error ||
+        "Failed to write users. Please try again.",
+    };
+  }
+};
+
 const validateUser = async (username) => {
   try {
     const response = await api.get(`${AUTH_PREFIX}/validateUser`, {
@@ -70,4 +98,4 @@ const getSession = async () => {
   }
 };
 
-export { validateUser, signIn, signUp, logout, getSession };
+export { validateUser, signIn, signUp, logout, getSession, getUser, writeUser };

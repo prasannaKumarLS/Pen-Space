@@ -6,6 +6,45 @@ import generateToken from "../middleware/generateAuthToken.js";
 // Initialize Express application
 const BCRYPT_SALT_ROUNDS = 10;
 
+// Get users
+const getUserData = async (req, res) => {
+  const params = req.query;
+  if (!params)
+    return res.status(400).json({ error: "Anyone parameter is required" });
+  try {
+    const response = await getUsers(params);
+    res.status(200).json(response);
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: `Error while fetching User data : ${err.message}` });
+  }
+};
+
+// Write User Data
+const writeAndUpdateUserData = async (req, res) => {
+  console.log(req);
+
+  const userData = req.body;
+  if (!userData) return res.status(400).json({ error: "User Data is empty" });
+  try {
+    const userDataArray = Array.isArray(userData) ? userData : [userData];
+    const updatedUsers = userDataArray.map((user) => {
+      return {
+        ...user,
+        isActive: user.isActive ?? true,
+      };
+    });
+    const response = await writeAndUpdateUser(updatedUsers);
+    console.log(response);
+    res.status(200).json(response);
+  } catch (err) {
+    res
+      .status(400)
+      .json({ error: `Error while writing User data : ${err.message}` });
+  }
+};
+
 //Validate Username for sign up
 const validateUser = async (req, res) => {
   const { username } = req.query;
@@ -97,4 +136,11 @@ const getSession = async (req, res) => {
         .json({ error: "Something went wrong while fetching session info" });
 };
 
-export { validateUser, signIn, signUp, getSession };
+export {
+  validateUser,
+  signIn,
+  signUp,
+  getSession,
+  getUserData,
+  writeAndUpdateUserData,
+};

@@ -69,6 +69,8 @@ export default function NavigationBar(props) {
         return console.log("Error while logging out : ", response.error);
       }
       navigate("/");
+    } else if (action === "SETTINGS") {
+      return navigate("/settings");
     }
   }
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { signUp, signIn } from "../services/authServices.js";
 import MessageCard from "../components/messageCard";
 import { getSession } from "../services/authServices.js";
+import { Loader } from "lucide-react";
 
 const userInfo = {
   name: "",
@@ -24,7 +25,7 @@ export default function SignIn() {
   const [userData, setUserData] = useState(userInfo);
   const [isSignUp, setIsSignUp] = useState(false);
   const [messageCard, setMessageCard] = useState(message);
-
+  const [isLoading, setIsLoading] = useState(false);
   const updateUserData = (field, value) => {
     setUserData((prevData) => ({
       ...prevData,
@@ -55,13 +56,16 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const res = isSignUp
       ? await signUp(userData)
       : await signIn(userData.username, userData.password);
     if (res.error) {
       handleMessageCard(res.error, "ERROR");
       console.log(res.error);
+      setIsLoading(false);
     } else {
+      setIsLoading(false);
       return isSignUp ? onSignup() : onSignIn();
     }
   };
@@ -124,7 +128,12 @@ export default function SignIn() {
               : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
-          {isSignUp ? "Sign Up" : "Sign In"}
+          <div className="flex flex-row items-center justify-center gap-2">
+            {isLoading && (
+              <Loader className="animate-spin mt-[2px]" size={17} />
+            )}
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </div>
         </button>
         {messageCard.type === "ERROR" && (
           <MessageCard message={messageCard.message} type="ERROR" />
