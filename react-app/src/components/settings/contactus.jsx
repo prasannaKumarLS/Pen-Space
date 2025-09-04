@@ -3,7 +3,7 @@ import { Phone, Mail } from "lucide-react";
 export default function ContactUs() {
   return (
     <div>
-      <div className="bg-white/5 p-6 rounded-2xl shadow-xl w-full">
+      <div className="p-6 w-full">
         <h2 className="text-2xl text-white font-semibold mb-2">Talk to us!</h2>
         <p className="text-white/70 text-base mb-6">
           Feel free to contact us and we’ll get back to you as soon as we can.
