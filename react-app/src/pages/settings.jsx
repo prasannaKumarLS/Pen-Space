@@ -9,6 +9,7 @@ import LoadingCard from "../utils/loadingCard";
 import ContactUs from "../components/settings/contactus";
 import SecurityInfo from "../components/settings/security";
 import bcrypt from "bcryptjs";
+import { logout } from "../services/authServices";
 
 const BCRYPT_SALT_ROUNDS = 10;
 
@@ -113,6 +114,14 @@ export default function Settings() {
       ...prev,
       isUpdating: false,
     }));
+  }
+
+  async function handleOnLogOut() {
+    const response = await logout();
+    if (response.error) {
+      return console.log("Error while logging out : ", response.error);
+    }
+    navigate("/");
   }
 
   const section = () => {
@@ -222,7 +231,10 @@ export default function Settings() {
         </div>
         {/* Logout */}
         <div className="flex justify-center mt-auto">
-          <button className="font-medium rounded-xl h-10 w-24 shadow-md transition-all duration-200 ease-out bg-red-600 text-white hover:bg-red-500 hover:shadow-lg hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-red-300">
+          <button
+            className="font-medium rounded-xl h-10 w-24 shadow-md transition-all duration-200 ease-out bg-red-600 text-white hover:bg-red-500 hover:shadow-lg hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-red-300"
+            onClick={handleOnLogOut}
+          >
             Logout
           </button>
         </div>

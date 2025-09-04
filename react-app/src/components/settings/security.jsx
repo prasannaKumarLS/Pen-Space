@@ -38,7 +38,7 @@ export default function SecurityInfo(props) {
 
   return (
     <div>
-      <div className="bg-white/5 p-6 rounded-2xl shadow-lg border border-white/10 backdrop-blur-md">
+      <div className="p-6">
         <span className="text-2xl text-white font-semibold mb-6 block">
           Change Password
         </span>
@@ -48,7 +48,7 @@ export default function SecurityInfo(props) {
           <div className="flex flex-col gap-2 w-1/2">
             <label
               htmlFor="currentPassword"
-              className="text-sm font-medium text-white/80 tracking-wide"
+              className="text-sm font-medium text-white tracking-wide"
             >
               Current Password
             </label>
@@ -78,7 +78,7 @@ export default function SecurityInfo(props) {
           <div className="flex flex-col gap-2 w-1/2">
             <label
               htmlFor="newPassword"
-              className="text-sm font-medium text-white/80 tracking-wide"
+              className="text-sm font-medium text-white tracking-wide"
             >
               New Password
             </label>
@@ -102,7 +102,7 @@ export default function SecurityInfo(props) {
           <div className="flex flex-col gap-2 w-1/2">
             <label
               htmlFor="confirmNewPassword"
-              className="text-sm font-medium text-white/80 tracking-wide"
+              className="text-sm font-medium text-white tracking-wide"
             >
               Confirm New Password
             </label>

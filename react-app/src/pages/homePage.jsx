@@ -187,7 +187,7 @@ export default function HomePage(props) {
           <section
             className="pl-6 pt-3 overflow-y-auto scrollbar-thin scrollbar-thumb-[#ffffffc5] scrollbar-track-transparent scrollbar-thumb-rounded-full h-[93vh]"
             // Add the height while converting to Navigation Bar h-[93vh]
-            style={{ width: "23%" }}
+            style={{ width: "22%" }}
           >
             <div className="flex flex-col gap-4 overlow-y-auto">
               <AddNoteButton addNoteOnClick={handleAddNoteClick} />

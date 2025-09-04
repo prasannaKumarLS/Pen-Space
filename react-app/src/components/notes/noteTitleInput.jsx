@@ -16,7 +16,7 @@ export default function NoteTitleInput(props) {
 
   return (
     <div className="bg-transparent font-sans p-2 absolute top-[50px] left-[40px]">
-      <div className="w-[250px] max-w-2xl">
+      <div className="w-[320px] max-w-2xl">
         <input
           type="text"
           value={value}
