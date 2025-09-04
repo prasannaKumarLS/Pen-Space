@@ -1,7 +1,10 @@
 # 🖊️ Pen Space – AI-Powered Notes Application
 
 Pen Space is a full-stack notes taking application with **AI-driven summarisation, categorisation, and document extraction**.  
-It enables users to create, auto-save, and chat with their notes, with seamless integration into **Appian Cloud** for database, AI, and process management.  
+It enables users to create, auto-save, and chat with their notes, with seamless integration into **Appian Cloud** for database, AI, and process management. 
+
+<img width="1919" height="950" alt="image" src="https://github.com/user-attachments/assets/64955396-e3f4-4976-9d68-2c4cf65312a4" />
+
 
 ## API Flow
 
