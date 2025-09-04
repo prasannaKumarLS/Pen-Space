@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
 import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession";
 import logo from "../assets/PenSpaceLogo.png";
-import { User, Moon, Headphones } from "lucide-react";
+import { User, Moon, Headphones, LockIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getUser, writeUser } from "../services/authServices";
 import PersonalInfo from "../components/settings/personalInfo";
 import LoadingCard from "../utils/loadingCard";
+import ContactUs from "../components/settings/contactus";
+import SecurityInfo from "../components/settings/security";
+import bcrypt from "bcryptjs";
+
+const BCRYPT_SALT_ROUNDS = 10;
 
 const listOfSettings = [
   { label: "Personal Info", icon: User },
+  { label: "Security", icon: LockIcon },
   { label: "Appearance", icon: Moon },
   { label: "Support", icon: Headphones },
 ];
@@ -30,8 +36,8 @@ export default function Settings() {
   const sessionInfo = AuthenticateAndGetSessionInfo();
   const [userData, setUserData] = useState(initialUserData);
   const [loadingCheck, setIsLoadingCheck] = useState({
-    isPersonalInfoQuerying: false,
-    isPersonalInfoUpdating: false,
+    isQuerying: false,
+    isUpdating: false,
   });
   const [messageCard, setMessageCard] = useState(initalMessage);
 
@@ -39,20 +45,21 @@ export default function Settings() {
     async function fetchSession() {
       setIsLoadingCheck((prev) => ({
         ...prev,
-        isPersonalInfoQuerying: true,
+        isQuerying: true,
       }));
       const data = await sessionInfo();
-      const response = await getUser({ id: data.id });
+      const response = await getUser({ id: data.userId });
       const responseData = response[0];
       setUserData((prev) => ({
         ...prev,
         name: responseData.name,
         email: responseData.email,
+        password: responseData.hashPassword,
         id: responseData.id,
       }));
       setIsLoadingCheck((prev) => ({
         ...prev,
-        isPersonalInfoQuerying: false,
+        isQuerying: false,
       }));
     }
     fetchSession();
@@ -68,10 +75,10 @@ export default function Settings() {
     }, 4000);
   };
 
-  async function handleOnSave() {
+  async function handleOnSaveForPersonalInfo() {
     setIsLoadingCheck((prev) => ({
       ...prev,
-      isPersonalInfoUpdating: true,
+      isUpdating: true,
     }));
     const response = await writeUser({
       ...userData,
@@ -83,9 +90,78 @@ export default function Settings() {
     handleMessageCard("User information updated Successfully.", "SUCCESS");
     return setIsLoadingCheck((prev) => ({
       ...prev,
-      isPersonalInfoUpdating: false,
+      isUpdating: false,
     }));
   }
+
+  async function handleOnSaveForSecurity(password) {
+    setIsLoadingCheck((prev) => ({
+      ...prev,
+      isUpdating: true,
+    }));
+    const hashPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+    const response = await writeUser({
+      ...userData,
+      id: userData.id,
+      password: hashPassword,
+    });
+    if (response.error) {
+      handleMessageCard("Failed to update the user.", "ERROR");
+    }
+    handleMessageCard("Password Updated successfully.", "SUCCESS");
+    return setIsLoadingCheck((prev) => ({
+      ...prev,
+      isUpdating: false,
+    }));
+  }
+
+  const section = () => {
+    switch (selectedIndex) {
+      case 0:
+        return loadingCheck.isQuerying ? (
+          <div className="flex flex-col items-end justify-end h-full w-3/4">
+            <LoadingCard TYPE="CARD_SPINNER" />
+          </div>
+        ) : (
+          <div className="w-1/2">
+            <PersonalInfo
+              userData={userData}
+              isLoading={loadingCheck.isUpdating}
+              messageCard={messageCard}
+              nameOnChange={(e) =>
+                setUserData((prev) => ({
+                  ...prev,
+                  name: e.target.value,
+                }))
+              }
+              emailOnChange={(e) =>
+                setUserData((prev) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
+              handleOnSave={handleOnSaveForPersonalInfo}
+            />
+          </div>
+        );
+      case 1:
+        return (
+          <div className="w-1/2">
+            <SecurityInfo
+              messageCard={messageCard}
+              isLoading={loadingCheck.isUpdating}
+              userData={userData}
+              currentPassword={userData.password}
+              handleOnSave={handleOnSaveForSecurity}
+            />
+          </div>
+        );
+      case 3:
+        return <ContactUs />;
+      default:
+        return <></>;
+    }
+  };
 
   return (
     <div className="h-screen w-full bg-gradient-to-tr from-[#3a3f52] to-[#1a1e28]">
@@ -142,36 +218,7 @@ export default function Settings() {
           </div>
           <div className="border-l border-white/20 mx-6 h-5/6"></div>
           {/* {Section } */}
-          {loadingCheck.isPersonalInfoQuerying ? (
-            <div className="flex flex-col items-end justify-end h-full w-3/4">
-              <LoadingCard TYPE="CARD_SPINNER" />
-            </div>
-          ) : (
-            <div className="w-1/2">
-              {selectedIndex === 0 && (
-                <div>
-                  <PersonalInfo
-                    userData={userData}
-                    isLoading={loadingCheck.isPersonalInfoUpdating}
-                    messageCard={messageCard}
-                    nameOnChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                    emailOnChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                    handleOnSave={handleOnSave}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          {section()}
         </div>
       </div>
     </div>

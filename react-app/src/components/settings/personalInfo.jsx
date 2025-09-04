@@ -1,7 +1,10 @@
 import { Loader } from "lucide-react";
-import InlineMessageCard from "../messageCard";
+import InlineMessageCard from "../../utils/messageCard";
 
 const maxCharForName = 225;
+
+const inputStyle =
+  "w-1/2 px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#1a1e28] ease-in-out focus:scale-[1.02]";
 
 export default function PersonalInfo(props) {
   const { userData, isLoading, messageCard } = props;
@@ -23,13 +26,11 @@ export default function PersonalInfo(props) {
             type="text"
             id="name"
             placeholder="Enter your name"
-            className={`w-1/2 px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 shadow-sm transition-all duration-200 
-        focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#1a1e28] 
-        ${
-          (userData.name?.length || 0) > maxCharForName
-            ? "border border-red-500 focus:ring-red-400 "
-            : "border border-white/20 focus:ring-blue-400 mb-3"
-        } `}
+            className={`${inputStyle} ${
+              (userData.name?.length || 0) > maxCharForName
+                ? "border border-red-500 focus:ring-red-400 "
+                : "border border-white/20 focus:ring-blue-400 mb-3"
+            } `}
             value={userData.name}
             onChange={props.nameOnChange}
             required
@@ -51,8 +52,7 @@ export default function PersonalInfo(props) {
             placeholder="Enter your Email"
             value={userData.email}
             onChange={props.emailOnChange}
-            className={`w-1/2 px-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 shadow-sm transition-all duration-200 
-        focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#1a1e28]`}
+            className={inputStyle}
           />
           <div className="flex flex-col items-end">
             <button

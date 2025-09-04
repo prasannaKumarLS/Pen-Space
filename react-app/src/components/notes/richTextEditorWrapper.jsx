@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import RichTextEditor from "../utils/richTextEditor.jsx";
-import { getNotes } from "../services/notesServices.js";
-import { writeNotes } from "../services/notesServices.js";
+import RichTextEditor from "../../utils/richTextEditor.jsx";
+import { getNotes } from "../../services/notesServices.js";
+import { writeNotes } from "../../services/notesServices.js";
 import { RefreshCcw } from "lucide-react";
-import LoadingCard from "../utils/loadingCard.jsx";
+import LoadingCard from "../../utils/loadingCard.jsx";
 
 export default function RichTextEditorWrapper(props) {
   const [rteContent, setRTEcontent] = useState("");

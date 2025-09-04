@@ -23,8 +23,6 @@ const getUserData = async (req, res) => {
 
 // Write User Data
 const writeAndUpdateUserData = async (req, res) => {
-  console.log(req);
-
   const userData = req.body;
   if (!userData) return res.status(400).json({ error: "User Data is empty" });
   try {
@@ -36,7 +34,6 @@ const writeAndUpdateUserData = async (req, res) => {
       };
     });
     const response = await writeAndUpdateUser(updatedUsers);
-    console.log(response);
     res.status(200).json(response);
   } catch (err) {
     res

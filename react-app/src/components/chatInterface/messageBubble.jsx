@@ -1,4 +1,4 @@
-import AIIconSparkle from "../utils/aiIcon";
+import AIIconSparkle from "../../utils/aiIcon";
 
 export default function MessageBubble(props) {
   const data = props.data;

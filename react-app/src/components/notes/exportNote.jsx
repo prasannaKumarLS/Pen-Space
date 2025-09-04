@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { generateNoteDocument } from "../services/notesServices";
-import InlineMessageCard from "./messageCard";
+import { generateNoteDocument } from "../../services/notesServices";
+import InlineMessageCard from "../../utils/messageCard";
 import { FileCodeIcon, Loader } from "lucide-react";
 
 export default function ExportNoteDocument(props) {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useReducer } from "react";
 import { Send } from "lucide-react";
-import MessageBubble from "../components/messageBubble";
+import MessageBubble from "../components/chatInterface/messageBubble";
 import { writeChatData, getChatData } from "../services/chatServices.js";
 import ThinkingEffect from "../utils/thinkingEffect.jsx";
 

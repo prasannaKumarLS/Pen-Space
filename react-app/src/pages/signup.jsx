@@ -3,7 +3,7 @@ import InputText from "../utils/textInput";
 import TitleLogo from "../components/projectTitle";
 import { useNavigate } from "react-router-dom";
 import { signUp, signIn } from "../services/authServices.js";
-import MessageCard from "../components/messageCard";
+import MessageCard from "../utils/messageCard.jsx";
 import { getSession } from "../services/authServices.js";
 import { Loader } from "lucide-react";
 

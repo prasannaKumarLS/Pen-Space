@@ -58,7 +58,6 @@ const signIn = async (username, password) => {
     localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
-    console.log(error);
     return {
       error: error.response?.data?.error || "Sign in failed. Please try again.",
     };

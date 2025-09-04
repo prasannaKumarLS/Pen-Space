@@ -1,12 +1,12 @@
 import { useState, useReducer, useEffect } from "react";
-import NoteTile from "../components/noteTile";
-import RichTextEditorWrapper from "../components/richTextEditorWrapper.jsx";
-import AddNoteButton from "../components/addNoteButton";
+import NoteTile from "../components/notes/noteTile.jsx";
+import RichTextEditorWrapper from "../components/notes/richTextEditorWrapper.jsx";
+import AddNoteButton from "../components/notes/addNoteButton.jsx";
 import { writeNotes, uploadNotes } from "../services/notesServices.js";
 import LoadingCard from "../utils/loadingCard.jsx";
-import TitleInput from "../components/noteTitleInput.jsx";
+import TitleInput from "../components/notes/noteTitleInput.jsx";
 import { getNotes } from "../services/notesServices.js";
-import ExportNoteDocument from "../components/exportNote.jsx";
+import ExportNoteDocument from "../components/notes/exportNote.jsx";
 
 function notesReducer(state, action) {
   switch (action.type) {

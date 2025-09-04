@@ -1,4 +1,4 @@
-import { writeNotes } from "../services/notesServices";
+import { writeNotes } from "../../services/notesServices";
 
 export default function NoteTitleInput(props) {
   const { value } = props;

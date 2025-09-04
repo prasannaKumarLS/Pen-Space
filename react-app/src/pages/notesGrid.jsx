@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getNotes } from "../services/notesServices";
-import NoteTile from "../components/noteTile";
+import NoteTile from "../components/notes/noteTile";
 import AuthenticateAndGetSessionInfo from "../services/authenticateAndGetSession";
 import LoadingCard from "../utils/loadingCard";
 import { MoveRight, MoveLeft } from "lucide-react";
