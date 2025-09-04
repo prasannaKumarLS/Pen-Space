@@ -1,4 +1,4 @@
-🖊️ Pen Space – AI-Powered Notes Application
+# 🖊️ Pen Space – AI-Powered Notes Application
 
 Pen Space is a full-stack notes taking application with **AI-driven summarisation, categorisation, and document extraction**.  
 It enables users to create, auto-save, and chat with their notes, with seamless integration into **Appian Cloud** for database, AI, and process management.  
