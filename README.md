@@ -13,12 +13,24 @@ React → Express → Appian
 - **Core Backend**: Appian (Database, APIs, AI, Process & Data Management, Document Storage)  
 - **Authentication**: JWT  
 
+## 🚀 Features 
 
-## ✨ Features
-- Create notes manually or upload documents → Extract, summarise & categorise using **Appian AI**  
-- Auto-save with **debounce method** into Appian Cloud DB  
-- Chat interface to query your notes using **Appian AI**  
-- Export notes as **PDF** (using HTML to PDF smart service)  
+1. **Create Notes (Manual or Upload Documents)**  
+   - Create new blank notes using a **rich text editor (React Quill)**.  
+   - Upload a document (PDF/Word/etc.) which is processed by **Appian AI Document Extraction**.  
+   - Extracted text is **summarized & categorized** by Appian AI.  
+
+2. **Auto-Save with Debounce**  
+   - Notes are automatically saved to **Appian Cloud Database** while you type.  
+   - Each change also triggers **summarization & categorization**.  
+
+3. **Chat Interface on Notes**  
+   - Ask questions about your own notes.  
+   - The chat backend uses **Appian AI** to contextually fetch knowledge from your stored notes.  
+
+4. **Export Notes as PDF**  
+   - Export individual notes to **PDF** (generated with Appian’s HTML-to-PDF smart service).  
+   - PDF contains the **Title, Summary, Category, and Content**.  
 
 
 ## 📦 Deployment Guide
