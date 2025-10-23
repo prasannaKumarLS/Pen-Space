@@ -59,7 +59,6 @@ const uploadAndWriteNotes = async (req, res) => {
 
 const generateNoteDocument = async (req, res) => {
   const { query } = req;
-  console.log(query);
   const getTimestamp = () => {
     const date = new Date();
     return (
@@ -71,7 +70,6 @@ const generateNoteDocument = async (req, res) => {
   if (!query) return res.status(400).json({ error: "Note ID is required" });
   try {
     const response = await generateDocument(query);
-    console.log(response);
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
