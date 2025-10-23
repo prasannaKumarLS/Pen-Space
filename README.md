@@ -20,8 +20,8 @@ React → Express → Appian
 
 1. **Create Notes (Manual or Upload Documents)**  
    - Create new blank notes using a **rich text editor (React Quill)**.  
-   - Upload a document (PDF/Word/etc.) which is processed by **Appian AI Document Extraction**.  
-   - Extracted text is **summarized & categorized** by Appian AI.  
+   - Upload a document which is processed by **Appian AI Document Extraction**.  
+   - Extracted JSON is processsed for **summarization & categorization** by Appian AI and shown in UI.  
 
 2. **Auto-Save with Debounce**  
    - Notes are automatically saved to **Appian Cloud Database** while you type.  
