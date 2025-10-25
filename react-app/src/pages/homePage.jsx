@@ -56,13 +56,7 @@ export default function HomePage(props) {
       if (response.length > 0) {
         dispatch({
           type: "LOAD",
-          payload: response.map((item) => {
-            const formattedDate = new Date(item.modifiedOn).toLocaleString();
-            return {
-              ...item,
-              modifiedOn: formattedDate,
-            };
-          }),
+          payload: response,
         });
         setIsLoadingCheck((prev) => {
           return { ...prev, isNotesQuering: false };
@@ -123,13 +117,9 @@ export default function HomePage(props) {
         }
       }
       if (payload) {
-        const formattedDate = new Date(payload.modifiedOn).toLocaleString();
         dispatch({
           type: "ADD",
-          payload: {
-            ...payload,
-            modifiedOn: formattedDate,
-          },
+          payload,
         });
       }
     } finally {

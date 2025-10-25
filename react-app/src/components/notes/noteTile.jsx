@@ -6,9 +6,10 @@ export default function NoteTile(props) {
   const { noteId, summary, category } = props;
   const isActive = props.selectedNoteId === noteId;
   const modifiedDate = new Date(props.modifiedOn);
-  const isToday = modifiedDate.toDateString() === new Date().toDateString();
-  const modifedDateString = isToday
-    ? modifiedDate.toLocaleTimeString("en-US", {
+  const now = new Date();
+  const isToday = modifiedDate.toDateString() === now.toDateString();
+  const modifiedDateString = isToday
+    ? modifiedDate.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -88,7 +89,7 @@ export default function NoteTile(props) {
           className={`text-[0.75rem]
            ${isActive ? "text-gray-200" : "text-gray-300"}`}
         >
-          {isToday ? `Today, ${modifedDateString}` : modifedDateString}
+          {isToday ? `Today, ${modifiedDateString}` : modifiedDateString}
         </span>
       </div>
     </button>
